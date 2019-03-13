@@ -18,5 +18,7 @@ var mainApp = {};
         console.log("I fired! Logout")
     }
     mainApp.logOut = logOut;
-    $("#button").on("click", mainApp.logOut); 
+    $("#signOut").on("click", mainApp.logOut); 
+
+
 })()

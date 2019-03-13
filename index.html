@@ -4,9 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Awesome Dashboard</title>
+    
+    <!-- jQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+  <!-- Firebase Reference -->
+  <script src="https://www.gstatic.com/firebasejs/5.8.6/firebase.js"></script>
+
+  <!-- Customized Stylesheet -->
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
 </head>
 <body>
-    <h1>JAKE WAS HERE</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="card">
+                    <div class="card-header bg-info text-white">Local News</div>
+                    <div class="card-body">
+                        <div id="local-news">
+                            <!-- append local news here -->
+                        </div>        
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="card">
+                    <div class="card-header bg-info text-white">Local Weather</div>
+                    <div class="card-body">
+                        <div id="local-weather">
+                            <!-- append local weather  here -->
+                        </div>        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pt-5">
+            <div class="col-lg-10 col-sm-10">
+                <!-- Jumbotron -->
+                <div class="jumbotron bg-info text-white container">
+                    
+                    <h1 class="text-center">Welcome <span id="commander">Commander</span><br>What do you want to do?</h1>
+                </div>
+            </div>
+            <div class="col-lg-2 col-sm-2">
+                <div><strong>API Search</strong></div>
+                <div id="job-api">Job Search</div>
+            </div>
+        </div>
+    </div>
+  <!-- JavaScript -->
+  <script src="logic.js"></script>
 </body>
 </html>

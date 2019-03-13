@@ -3,6 +3,7 @@
 
 (function () {
      var ui = new firebaseui.auth.AuthUI(firebase.auth());
+
     var uiConfig = {
         callbacks: {
             signInSuccessWithAuthResult: function (authResult, redirectUrl) {
@@ -38,7 +39,5 @@
 
     // The start method will wait until the DOM is loaded.
      ui.start('#firebaseui-auth-container', uiConfig);
-
-
 
 })()

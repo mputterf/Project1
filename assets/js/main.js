@@ -101,11 +101,22 @@ var mainApp = {};
      function displayNews(newsResponse){
         for(var i = 0; i < 5; i++){  
         if(deBugger){console.log("this news loop is running")};
-        var newsDiv = $("<div>");
+        // The list item that will house everything
+        var newsDiv = $("<li>");
+        // Store the link
+        var newsItem = $("<a>");
+        // Giving each news item the class and an id
         newsDiv.addClass("news-data");
         newsDiv.attr("id", "news-headlines-" + i);
-        newsDiv.append("<li>" + newsResponse.articles[i].title + "</li>").attr("href", newsResponse.articles[i].url);
-        // newsDiv.prop("href", newsResponse.articles[i].url);
+        // append article link
+        newsItem.attr("href", newsResponse.articles[i].url);
+        // So the article opens in a new tab
+        newsItem.attr("target", "_blank");
+        // So the user sees the article title
+        newsItem.text(newsResponse.articles[i].title)
+        // append the link to the new list item
+        newsDiv.append(newsItem);
+        // put it on the html
         $(".news").append(newsDiv);
     
         }

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+        <!-- jquery with ajax -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>This is a test</h1>
+    <script>
+        function getNews(){
+        var apiKey = 'ff02f8fa534944bdabc33f466133f39a';
+        var queryURL = 'https://newsapi.org/v2/top-headlines?country=us&apiKey=ff02f8fa534944bdabc33f466133f39a';
+        console.log("it started");
+
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+
+        }).then(function (newsResponse) {
+            console.log(newsResponse);
+        //    displayWeather(weatherResponse);
+        });
+    }
+
+getNews();
+        </script>
+</body>
+</html>

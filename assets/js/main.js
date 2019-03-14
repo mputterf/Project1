@@ -18,6 +18,7 @@ var mainApp = {};
             userName = user.displayName;
             displayName();
             getWeather();
+            getNews();
         } else {
             //no user signed in
             uid = null;
@@ -82,8 +83,43 @@ var mainApp = {};
         // Send it all to the html
         $(".weather").append(weatherDiv);
       }
+    }
 
-
+    function getNews(){
+            var apiKey = 'ff02f8fa534944bdabc33f466133f39a';
+            var queryURL = 'https://newsapi.org/v2/top-headlines?country=us&apiKey=ff02f8fa534944bdabc33f466133f39a';
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+    
+            }).then(function (newsResponse) {
+                console.log(newsResponse);
+               displayNews(newsResponse);
+            });
+    }
+    
+     function displayNews(newsResponse){
+        for(var i = 0; i < 5; i++){  
+        if(deBugger){console.log("this news loop is running")};
+        // The list item that will house everything
+        var newsDiv = $("<li>");
+        // Store the link
+        var newsItem = $("<a>");
+        // Giving each news item the class and an id
+        newsDiv.addClass("news-data");
+        newsDiv.attr("id", "news-headlines-" + i);
+        // append article link
+        newsItem.attr("href", newsResponse.articles[i].url);
+        // So the article opens in a new tab
+        newsItem.attr("target", "_blank");
+        // So the user sees the article title
+        newsItem.text(newsResponse.articles[i].title)
+        // append the link to the new list item
+        newsDiv.append(newsItem);
+        // put it on the html
+        $(".news").append(newsDiv);
+    
+        }
 
     }
 

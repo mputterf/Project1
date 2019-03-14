@@ -18,6 +18,7 @@ var mainApp = {};
             userName = user.displayName;
             displayName();
             getWeather();
+            getNews();
         } else {
             //no user signed in
             uid = null;
@@ -82,8 +83,32 @@ var mainApp = {};
         // Send it all to the html
         $(".weather").append(weatherDiv);
       }
+    }
 
-
+    function getNews(){
+            var apiKey = 'ff02f8fa534944bdabc33f466133f39a';
+            var queryURL = 'https://newsapi.org/v2/top-headlines?country=us&apiKey=ff02f8fa534944bdabc33f466133f39a';
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+    
+            }).then(function (newsResponse) {
+                console.log(newsResponse);
+               displayNews(newsResponse);
+            });
+    }
+    
+     function displayNews(newsResponse){
+        for(var i = 0; i < 5; i++){  
+        if(deBugger){console.log("this news loop is running")};
+        var newsDiv = $("<div>");
+        newsDiv.addClass("news-data");
+        newsDiv.attr("id", "news-headlines-" + i);
+        newsDiv.append("<li>" + newsResponse.articles[i].title + "</li>").attr("href", newsResponse.articles[i].url);
+        // newsDiv.prop("href", newsResponse.articles[i].url);
+        $(".news").append(newsDiv);
+    
+        }
 
     }
 

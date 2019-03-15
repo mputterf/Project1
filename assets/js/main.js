@@ -7,8 +7,8 @@ var mainApp = {};
     var uid = null;
     var userName = "";
     var postal = "";
-    let uidState = false;
     countryCode = "";
+    let uidState = false;
     deBugger = true;
 
     firebase.auth().onAuthStateChanged(function (user) {
@@ -19,14 +19,16 @@ var mainApp = {};
             };
             uid = user.uid;
             userName = user.displayName;
-            displayName();
             //getWeather();
             getNews();
+            zipChange();
+            keyFinder();
+            //delay necessary due to the time it takes for the other functions to run
             setTimeout(() => {
+                displayName();
                 zreturn();   
-                zipChange();
-                keyFinder();
-            }, 500);
+            }, 1000);
+
         } else {
             //no user signed in
             uid = null;
@@ -231,25 +233,31 @@ var mainApp = {};
             snap.forEach((child) => {
                 let uidKey = child.key;
                 console.log("this is the UID Key: " + uidKey);
+                console.log("Zipcode pulled from Firebase DB");
                 uidState = true;
                 postal = child.val().postal;
             });
         });
         setTimeout(() => {
             dbKeyChecker();
-        }, 2000);
+        }, 500);
         
     }
 
+    // checks if youre in the db already
     let dbKeyChecker = () => {
         if(!uidState){
-            pushDB();
+            pullPostal();
+            setTimeout(() => {
+                pushDB();    
+            }, 500);
         }
     }
 
   
     //capture the users IP address and utilize it to pull news and weather
-
+let pullPostal = () => {
+    console.log("Zipcode Pulled from IP via ipinfo.io");
     $.get("https://ipinfo.io", function (response) {
         postal = response.postal;
         countryCode = response.country;
@@ -257,6 +265,8 @@ var mainApp = {};
             console.log(response);
         };
     }, "jsonp");
+}
+
 
 
     

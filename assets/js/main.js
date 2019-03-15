@@ -7,7 +7,7 @@ var mainApp = {};
     var uid = null;
     var userName = "";
     var postal = "";
-    countryCode = "";
+    countryCode = "us";
     let uidState = false;
     deBugger = true;
 
@@ -27,7 +27,7 @@ var mainApp = {};
             setTimeout(() => {
                 displayName();
                 zreturn();   
-              //  getWeather();
+                getWeather();
               getNews();
             }, 1000);
 
@@ -57,7 +57,7 @@ var mainApp = {};
     }
 
     function getWeather() {
-        var apiKey = 'APPID=a7f3e822eb731f30dd,bb12e9307014cb';
+        var apiKey = 'APPID=a7f3e822eb731f30ddbb12e9307014cb';
         var queryURL = 'http://api.openweathermap.org/data/2.5/forecast?' + apiKey + '&zip=' + postal + ',' + countryCode;
         $.ajax({
             url: queryURL,
@@ -100,7 +100,7 @@ var mainApp = {};
       }
       
       // overwrite old news when zip is updated
-      $(".weather").html(newsWrapper);
+      $(".cardWeather").html(newsWrapper);
       console.log("weather Updated");
     }
 
@@ -268,11 +268,5 @@ let pullPostal = () => {
         };
     }, "jsonp");
 }
-
-
-
-    
-
-
 
 })()

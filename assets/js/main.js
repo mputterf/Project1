@@ -17,7 +17,7 @@ var mainApp = {};
             uid = user.uid;
             userName = user.displayName;
             displayName();
-            getWeather();
+          //  getWeather();
             getNews();
         } else {
             //no user signed in

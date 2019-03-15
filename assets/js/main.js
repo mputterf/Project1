@@ -19,6 +19,10 @@ var mainApp = {};
             displayName();
             getWeather();
             getNews();
+            setTimeout(() => {
+                zreturn();   
+                zipChange();     
+            }, 500);
         } else {
             //no user signed in
             uid = null;
@@ -45,7 +49,7 @@ var mainApp = {};
     }
 
     function getWeather() {
-        var apiKey = 'APPID=a7f3e822eb731f30ddbb12e9307014cb';
+        var apiKey = 'APPID=a7f3e822eb731f30dd,bb12e9307014cb';
         var queryURL = 'http://api.openweathermap.org/data/2.5/forecast?' + apiKey + '&zip=' + postal + ',' + countryCode;
         $.ajax({
             url: queryURL,
@@ -123,6 +127,77 @@ var mainApp = {};
 
     }
 
+    // sets placeholder as your zip
+        let zreturn = () => {
+            console.log(postal);
+            $('.zip-input').attr("placeholder", "Current Zip: " + postal);
+        }
+        
+
+    // set postal as a temp variable
+    let zipChange = () => {
+        $(".zip-btn").on("click", function() {
+            let zi = $(".zip-input").val().trim();
+                postal = zi;
+                console.log(postal);
+        });
+    }
+
+    //error function to display prompt
+    let error = (id) => {
+        let tempW = $("<div/>");
+        tempW.css({
+            "position": "absolute",
+            "top": "calc(50% - 100px)",
+            "left": "calc(50% - 300px)",
+            "width": "600px",
+            "height": "200px",
+        });
+        tempW.addClass("error");
+        let temp = $("<div/>");
+        temp.css({
+            "position" : "relative",
+            "display": "grid",
+            "justify-items": "center",
+            "align-items": "center",
+            "z-index": "100",
+            "width": "600px",
+            "height": "200px",
+            "background-color": "red",
+            "color": "black",
+            "font-family": "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+            "font-weight": "bolder",
+            "border": "5px inset black",
+            "border-radius": "10px",
+            "font-size": "30px",
+            "text-align": "center"
+        });
+        let tempP = $("<p/>");
+        let close = $("<div/>");
+        close.text("X");
+        close.css({
+            "position": "absolute",
+            "top": "0",
+            "right": "10px",
+            "font-family": "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
+            "font-weight": "bolder",
+            "font-size": "50px",
+            "color": "black",
+            "width": "50px",
+            "height": "50px"
+        });
+        close.attr("id", "close");
+        tempP.text(id);
+        temp.append(tempP).append(close);
+        tempW.append(temp);
+        $("body").append(tempW).on("click", "#close", function () {
+            $(this).parent().parent().remove();
+        });
+
+
+    }
+    
+
     //capture the users IP address and utilize it to pull news and weather
 
     $.get("https://ipinfo.io", function (response) {
@@ -131,6 +206,12 @@ var mainApp = {};
         if (deBugger) {
             console.log(response);
         };
-    }, "jsonp")
+    }, "jsonp");
+
+
+
+    
+
+
 
 })()

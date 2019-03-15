@@ -59,7 +59,7 @@ var mainApp = {};
     function getWeather() {
         var apiKey = '9602d3b72d584a3fad8204559191503';
         // Max days to return is 10 days according to the docs
-        var forecastDays = 7
+        var forecastDays = 5;
         var queryURL = 'https://api.apixu.com/v1/forecast.json?key=' + apiKey + '&q=' + postal + '&days=' + forecastDays;
         $.ajax({
             url: queryURL,
@@ -78,6 +78,7 @@ var mainApp = {};
       // Creating weather wrapper to overwrite HTML every time new zip is made
       let weatherWrapper = $("<div/>");
       weatherWrapper.addClass("weather-wrapper");
+      weatherWrapper.addClass("card-deck");
 
       for (var i=0; i<results.length; i++){
         // Create new div for each forecast
@@ -85,26 +86,28 @@ var mainApp = {};
 
         // give it a boostrap card for a boarder
         weatherDiv.addClass("card");
+        // Own class for the card
+        weatherDiv.addClass("weather-card");
         // Give the data a class.
         weatherDiv.addClass("weather-data");
         // Give each forecast an id
         weatherDiv.attr("id", "weather-forecast-" + i);
         // Display the date and time the forecast is for.
-        weatherDiv.append("<li> Date: " + results[i].date + "</li>");
+        weatherDiv.append("<p class=weather-info> Date: " + moment(results[i].date).format('dddd') + "</p>");
         // Display high for the day
-        weatherDiv.append("<ul> High: " + results[i].day.maxtemp_f + " F </ul>");
+        weatherDiv.append("<p class=weather-info> High: " + parseInt(results[i].day.maxtemp_f) + "°F </p>");
         // Display low for the day
-        weatherDiv.append("<ul> High: " + results[i].day.mintemp_f + " F </ul>");
+        weatherDiv.append("<p class=weather-info> Low: " + parseInt(results[i].day.mintemp_f) + "°F </p>");
         // Display wind speed
-        weatherDiv.append("<ul> Wind Speed: " + results[i].day.maxwind_mph + " mph </ul>");
+        weatherDiv.append("<p class=weather-info> Wind Speed: " + parseInt(results[i].day.maxwind_mph) + "mph </p>");
         // Weather condition
-        weatherDiv.append("<img " + "src=https:" + results[i].day.condition.icon + " >");
+        weatherDiv.append("<img class=weather-condition src=https:" + results[i].day.condition.icon + " >");
         // populate the weatherWrapper
         weatherWrapper.append(weatherDiv);
       }
 
       // overwrite old news when zip is updated
-      $(".cardWeather").html(weatherWrapper);
+      $(".weather").html(weatherWrapper);
       console.log("weather Updated");
     }
 

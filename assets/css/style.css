@@ -1,0 +1,128 @@
+body{
+    font-family: 'Open Sans', sans-serif;
+    font-size: 17px;
+    line-height: 1.5em;
+    margin: 0;
+    padding: 0;
+}
+
+.container{
+    margin: auto;
+}
+
+.primary-text{
+    color:#56a79a;
+}
+.primary-bg{
+    background:#56a79a;
+}
+.center{
+
+    display: block;
+    width:50px;
+}
+/* HEADER */
+
+#main-header{
+    border-bottom: #56a79a 1px solid;
+}
+/* NAVBAR */
+#navbar{
+    text-transform: uppercase;
+
+}
+#navbar li{
+    display: inline;
+    padding-right: 20px;
+    list-style: none;
+}
+#navbar a{
+    text-decoration: none;
+    color:#888;
+}
+#navbar li.current a, #navbar{
+color:#56a79a;
+padding-bottom: 3px;
+}
+#navbar a:hover { color: #4aaaa5; }
+#navbar a:active { color: #4aaaa5; }
+/* SHOWCASE */
+
+#sidebar{
+    margin:0;
+    margin-top:25px;
+    width:100%;
+    border: 3px #4aaaa5 solid;
+    background: #666666;;
+    color:#FFF;
+    font-size: 18px;
+    border-radius: 15px 50px 30px;
+    text-align: center;
+    box-shadow: 5px 5px #4aaaa5;
+    text-shadow: 2px 1px #111;
+
+}
+#sidebar li{
+    list-style: none;
+    padding-bottom: 10px;
+    padding-top:25px;
+    padding-right: 20px;
+    font-size:25px;
+}
+ #sidebar li a, #navbar{
+    color:#fff;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 0.46875rem 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    
+} 
+
+#sidebar a:hover {
+    color: pink;
+}
+
+#sidebar a:active {
+    color: yellow; 
+}
+
+.mainContent{
+    text-align: center;
+    margin:30px 30px;
+    padding: 30px 30px;
+    background: #fff;
+    color: #333;
+    border: 1px solid #444;
+    width: calc(100% - 260px);
+    min-height: calc(70vh - 50px);
+    position: relative;
+    float: right;
+    transition: 0.33s, cubic-bezier(0.685, 0.0473, 0.346, 1); 
+    -webkit-box-shadow: 0px 10px 10px #000000;
+    box-shadow: 0px 10px 10px #000000;
+}
+
+/* Footer */
+#main-footer{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        border-top: 5px  #4aaaa5 solid;
+        background: #666666;
+        text-align: center;
+        color: white;
+        font-size: 20px;
+        width: 100%; 
+}
+#footerText{
+    margin-top: 10px;
+}

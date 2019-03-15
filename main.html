@@ -14,23 +14,28 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <h1>Awesome<span class="primary-text">Dash</h1></span>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="main.html">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">My Account</a></li>
-              <li class="nav-item">
-              <a class="nav-link" id="signOut" href="#">Sign out</a></li>
-          </ul>
-        </div>
-      </nav>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">AwesomeDash</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div id="navbarNavDropdown" class="navbar-collapse collapse">
+                <ul class="navbar-nav mr-auto">
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" id="accountEdit" href="#">My Account</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id ="signOut" href="#">Sign Out</a>
+                    </li>
+                </ul>
+            </div>
+            <div class = 'zip-div' style="margin: 20px 20px; display: grid; align-items: center; justify-items: center; grid-template-columns: 1fr 1fr;">
+                <input class = "zip-input" type = "text" maxlength="5" style = "text-align: center; grid-column: 1/2;" placeholder= "Current Zip: ">
+                <button class = "zip-btn" type="submit">Change Zip Code</button>
+            </div>
+        </nav>
 
 
 
@@ -49,7 +54,7 @@
                     <p class="card-text news"></p>
                 </div>
             </div>
-        </div>
+       </div>
     </div>
 </section>
 <section id="mainBody">

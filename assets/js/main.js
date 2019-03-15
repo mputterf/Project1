@@ -65,6 +65,10 @@ var mainApp = {};
       // weatherResponse.list gives an array, so stuff in results is an array and should be accessed with results[i]
       var results = weatherResponse.list;
 
+      // Creating weather wrapper to overwrite HTML every time new zip is made
+      let weatherWrapper = $("<div/>");
+      weatherWrapper.addClass("weather-wrapper");
+
       for (var i=0; i<weatherResponse.list.length; i++){
         // Create new div for each forecast
         var weatherDiv = $("<div>");
@@ -83,10 +87,13 @@ var mainApp = {};
         weatherDiv.append("<ul> Wind Speed: " + results[i].wind.speed + " mph </ul>");
         // Status of the sky
         weatherDiv.append("<ul>" + results[i].weather[0].main + "</ul>");
-
-        // Send it all to the html
-        $(".weather").append(weatherDiv);
+        // populate the weatherWrapper
+        weatherWrapper.append(weatherDiv);
       }
+      
+      // overwrite old news when zip is updated
+      $(".weather").html(newsWrapper);
+      console.log("weather Updated");
     }
 
     function getNews(){
@@ -103,6 +110,10 @@ var mainApp = {};
     }
     
      function displayNews(newsResponse){
+         // Creating news wrapper to overwrite HTML every time new zip is made
+         let newsWrapper = $("<div/>");
+        newsWrapper.addClass("news-Wrapper");
+
         for(var i = 0; i < 5; i++){  
         if(deBugger){console.log("this news loop is running")};
         // The list item that will house everything
@@ -120,11 +131,14 @@ var mainApp = {};
         newsItem.text(newsResponse.articles[i].title)
         // append the link to the new list item
         newsDiv.append(newsItem);
-        // put it on the html
-        $(".news").append(newsDiv);
+        // populate the newsWrapper
+        newsWrapper.append(newsDiv);
     
         }
 
+    // overwrite old news when zip is updated
+        $(".news").html(newsWrapper);
+        console.log("news Updated");
     }
 
     // sets placeholder as your zip
@@ -139,6 +153,8 @@ var mainApp = {};
         $(".zip-btn").on("click", function() {
             let zi = $(".zip-input").val().trim();
                 postal = zi;
+                getWeather();
+                getNews();
                 console.log(postal);
         });
     }
@@ -193,8 +209,6 @@ var mainApp = {};
         $("body").append(tempW).on("click", "#close", function () {
             $(this).parent().parent().remove();
         });
-
-
     }
     
 

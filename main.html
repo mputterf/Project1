@@ -7,10 +7,13 @@
     <title>Awesome Dash</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
- <div id="app" class="container">
+
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="#">AwesomeDash</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,28 +36,56 @@
                 <button class = "zip-btn" type="submit">Change Zip Code</button>
             </div>
         </nav>
-    </div>
-    <div class="row col-md-10 offset-md-1">
-        <div class="card col-md-6">
-            <div class="card-header text-center">
-                Your Weather Forcast
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="weather"></li>
-            </ul>
-        </div>
-        <div class="card col-md-6">
-            <div class="card-header text-center">
-               Top Headlines
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="news"></li>
-              
-            </ul>
-        </div>
-    </div>
 
-    <div class = "mainContent col-md-8 offset-md-4"></div>
+
+
+<section class="top">
+    <div class="container-fluid">
+        <div class="row">
+                <div class="cardWeather  col-sm-12 col-md-6 col-lg-6">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Your Weather</h5>
+                            <p class="card-text weather"></p>
+                        </div>
+                    </div>
+            <div class="cardNews  col-sm-12 col-md-6 col-lg-6">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Top Headlines</h5>
+                    <p class="card-text news"></p>
+                </div>
+            </div>
+       </div>
+    </div>
+</section>
+<section id="mainBody">
+    <div class="contianer">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="row">
+                    <div id="sidebar" class="col-xs-12 col-sm-12 col-md-3 col-lg-2 ">
+                        <ul>
+                            <li><a href="#">Link1</a></li>
+                            <li><a href="#">Link2</a></li>
+                            <li><a href="#">Link3</a></li>
+                            <li><a href="#">Link4</a></li>
+                        </ul>
+                    </div>
+                    <div class="mainContent col col-sm-12 col-md col-lg ">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<footer id="main-footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-12 col-lg-12 sticky-bottom footer">
+                <p id="footerText">©Copyright AwesomeDash</p>
+            </div>
+        </div>
+    </div>
+</footer>
 
     <!-- jquery with ajax -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

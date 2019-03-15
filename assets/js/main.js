@@ -19,14 +19,16 @@ var mainApp = {};
             };
             uid = user.uid;
             userName = user.displayName;
-            //getWeather();
-            getNews();
+          
+            
             zipChange();
             keyFinder();
             //delay necessary due to the time it takes for the other functions to run
             setTimeout(() => {
                 displayName();
                 zreturn();   
+              //  getWeather();
+              getNews();
             }, 1000);
 
         } else {

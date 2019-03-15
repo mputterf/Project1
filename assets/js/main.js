@@ -2,9 +2,12 @@ var mainApp = {};
 
 (function () {
     var firebase = app_firebase;
+    const db = firebase.database();
+    const dbr = db.ref();
     var uid = null;
     var userName = "";
     var postal = "";
+    let uidState = false;
     countryCode = "";
     deBugger = true;
 
@@ -17,11 +20,12 @@ var mainApp = {};
             uid = user.uid;
             userName = user.displayName;
             displayName();
-            getWeather();
+            //getWeather();
             getNews();
             setTimeout(() => {
                 zreturn();   
-                zipChange();     
+                zipChange();
+                keyFinder();
             }, 500);
         } else {
             //no user signed in
@@ -210,8 +214,40 @@ var mainApp = {};
             $(this).parent().parent().remove();
         });
     }
-    
 
+
+    // push zipcode and UID to db
+    let pushDB = () => {
+        dbr.push({
+            uid,
+            postal,
+        });
+        
+    }
+    
+    // finds key to current UID
+    let keyFinder = () => {
+        dbr.orderByChild("uid").equalTo(uid).on("value", (snap) => {
+            snap.forEach((child) => {
+                let uidKey = child.key;
+                console.log("this is the UID Key: " + uidKey);
+                uidState = true;
+                postal = child.val().postal;
+            });
+        });
+        setTimeout(() => {
+            dbKeyChecker();
+        }, 2000);
+        
+    }
+
+    let dbKeyChecker = () => {
+        if(!uidState){
+            pushDB();
+        }
+    }
+
+  
     //capture the users IP address and utilize it to pull news and weather
 
     $.get("https://ipinfo.io", function (response) {
@@ -221,7 +257,6 @@ var mainApp = {};
             console.log(response);
         };
     }, "jsonp");
-
 
 
     

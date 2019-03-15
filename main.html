@@ -13,40 +13,51 @@
     <link type="text/css" rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-<header id="main-header">
-    <div class="container">
-        <div class="row">
-            <div class="logo col-xs-12 col-sm-3 col-md-3 col-lg-3">
-                <h1>Awesome<span class="primary-text">Dash</h1></span>
 
-            </div>
-            <nav id="navbar" class="navbar col-xs-12 col-sm-9 col-md-9 col-lg-9">
-                <ul class="ml-auto">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="index.html">Future</a></li>
-                    <li><a href="index.html">Future</a></li>
-                    <li><a href="index.html">Contact</a></li>
-                </ul>
-            </nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <h1>Awesome<span class="primary-text">Dash</h1></span>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="main.html">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">My Account</a></li>
+              <li class="nav-item">
+              <a class="nav-link" id="signOut" href="#">Sign out</a></li>
+          </ul>
         </div>
-    </div>
-</header>
+      </nav>
+
+
+
 <section class="top">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-md-12">
-                <div class="weather col-xs-12 col-sm-6 col-md-6 col-lg-6"></div>
-                <div class="news col-xs-12 col-sm-6 col-md-6 col-lg-6"></div>
+                <div class="cardWeather  col-sm-12 col-md-6 col-lg-6">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">Your Weather</h5>
+                            <p class="card-text weather"></p>
+                        </div>
+                    </div>
+            <div class="cardNews  col-sm-12 col-md-6 col-lg-6">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Top Headlines</h5>
+                    <p class="card-text news"></p>
+                </div>
             </div>
         </div>
     </div>
 </section>
 <section id="mainBody">
-    <div class="container">
+    <div class="contianer">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="row">
-                    <div id="sidebar" class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
+                    <div id="sidebar" class="col-xs-12 col-sm-12 col-md-3 col-lg-2 ">
                         <ul>
                             <li><a href="#">Link1</a></li>
                             <li><a href="#">Link2</a></li>
@@ -54,11 +65,8 @@
                             <li><a href="#">Link4</a></li>
                         </ul>
                     </div>
-                    <!-- <div class="col-xs-6 col-sm-8 col-md-8 col-lg-10"> -->
-                    <div class="mainContent col-xs-12">
-
+                    <div class="mainContent col col-sm-12 col-md col-lg ">
                     </div>
-                    <!-- </div> -->
                 </div>
             </div>
         </div>

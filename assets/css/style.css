@@ -5,9 +5,31 @@ body{
     margin: 0;
     padding: 0;
 }
+.section{
+    margin:0;
+    padding:0;
 
+}
 .container{
     margin: auto;
+    width:100%;
+
+}
+.card{
+    margin-top: 15px;
+}
+.news{
+    margin: auto;
+    width:100%;
+    border: 1px solid #888;
+    box-shadow: 0 5px 40px 2px rgba(155,155,155,1);
+}
+
+.weather{
+        margin: auto;
+        width:100%;
+        border: 1px solid #888;
+        box-shadow: 0 5px 40px 2px rgba(155,155,155,1);
 }
 
 .primary-text{
@@ -46,7 +68,7 @@ padding-bottom: 3px;
 }
 #navbar a:hover { color: #4aaaa5; }
 #navbar a:active { color: #4aaaa5; }
-/* SHOWCASE */
+/* Sidebar*/
 
 #sidebar{
     margin:0;
@@ -95,9 +117,11 @@ padding-bottom: 3px;
     color: yellow; 
 }
 
+
+/* MAINCONTENT */
 .mainContent{
     text-align: center;
-    margin:30px 30px;
+    margin:30px 30px 0px 30px;
     padding: 30px 30px;
     background: #fff;
     color: #333;
@@ -107,8 +131,7 @@ padding-bottom: 3px;
     position: relative;
     float: right;
     transition: 0.33s, cubic-bezier(0.685, 0.0473, 0.346, 1); 
-    -webkit-box-shadow: 0px 10px 10px #000000;
-    box-shadow: 0px 10px 10px #000000;
+    box-shadow: 0 5px 40px 2px rgba(155,155,155,1);
 }
 
 /* Footer */
@@ -125,4 +148,19 @@ padding-bottom: 3px;
 }
 #footerText{
     margin-top: 10px;
+}
+.weather{
+
+}
+@media (min-width: 1900px){
+
+    .container {
+         max-width: 1600px;
+    }
+    .mainContent{
+        margin-right: 50px;
+    }
+    #sidebar{
+        margin-left: 80px;
+    }
 }

@@ -19,14 +19,14 @@ var mainApp = {};
             };
             uid = user.uid;
             userName = user.displayName;
-          
-            
+
+
             zipChange();
             keyFinder();
             //delay necessary due to the time it takes for the other functions to run
             setTimeout(() => {
                 displayName();
-                zreturn();   
+                zreturn();
                 getWeather();
               getNews();
             }, 1000);
@@ -57,50 +57,57 @@ var mainApp = {};
     }
 
     function getWeather() {
-        var apiKey = 'APPID=a7f3e822eb731f30ddbb12e9307014cb';
-        var queryURL = 'http://api.openweathermap.org/data/2.5/forecast?' + apiKey + '&zip=' + postal + ',' + countryCode;
+        var apiKey = '9602d3b72d584a3fad8204559191503';
+        // Max days to return is 10 days according to the docs
+        var forecastDays = 5;
+        var queryURL = 'https://api.apixu.com/v1/forecast.json?key=' + apiKey + '&q=' + postal + '&days=' + forecastDays;
         $.ajax({
             url: queryURL,
             method: "GET"
 
         }).then(function (weatherResponse) {
-            console.log(weatherResponse.list);
+            console.log("Weather object", weatherResponse.forecast.forecastday);
             displayWeather(weatherResponse);
         });
     }
 
     function displayWeather(weatherResponse) {
-      // weatherResponse.list gives an array, so stuff in results is an array and should be accessed with results[i]
-      var results = weatherResponse.list;
+      // weatherResponse.forecast.forecastday gives an array, so stuff in results is an array and should be accessed with results[i]
+      var results = weatherResponse.forecast.forecastday;
 
       // Creating weather wrapper to overwrite HTML every time new zip is made
       let weatherWrapper = $("<div/>");
       weatherWrapper.addClass("weather-wrapper");
+      weatherWrapper.addClass("card-deck");
 
-      for (var i=0; i<weatherResponse.list.length; i++){
+      for (var i=0; i<results.length; i++){
         // Create new div for each forecast
         var weatherDiv = $("<div>");
 
         // give it a boostrap card for a boarder
         weatherDiv.addClass("card");
+        // Own class for the card
+        weatherDiv.addClass("weather-card");
         // Give the data a class.
         weatherDiv.addClass("weather-data");
         // Give each forecast an id
         weatherDiv.attr("id", "weather-forecast-" + i);
         // Display the date and time the forecast is for.
-        weatherDiv.append("<li> Date & Time: " + results[i].dt_txt + "</li>");
-        // Display temp (needs to be converted from K to F)
-        weatherDiv.append("<ul> Temperature: " + parseInt((results[i].main.temp - 273.15) * (9/5) + 32) + " F </ul>");
+        weatherDiv.append("<p class=weather-info> Date: " + moment(results[i].date).format('dddd') + "</p>");
+        // Display high for the day
+        weatherDiv.append("<p class=weather-info> High: " + parseInt(results[i].day.maxtemp_f) + "°F </p>");
+        // Display low for the day
+        weatherDiv.append("<p class=weather-info> Low: " + parseInt(results[i].day.mintemp_f) + "°F </p>");
         // Display wind speed
-        weatherDiv.append("<ul> Wind Speed: " + results[i].wind.speed + " mph </ul>");
-        // Status of the sky
-        weatherDiv.append("<ul>" + results[i].weather[0].main + "</ul>");
+        weatherDiv.append("<p class=weather-info> Wind Speed: " + parseInt(results[i].day.maxwind_mph) + "mph </p>");
+        // Weather condition
+        weatherDiv.append("<img class=weather-condition src=https:" + results[i].day.condition.icon + " >");
         // populate the weatherWrapper
         weatherWrapper.append(weatherDiv);
       }
-      
+
       // overwrite old news when zip is updated
-      $(".cardWeather").html(newsWrapper);
+      $(".weather").html(weatherWrapper);
       console.log("weather Updated");
     }
 
@@ -110,19 +117,19 @@ var mainApp = {};
             $.ajax({
                 url: queryURL,
                 method: "GET"
-    
+
             }).then(function (newsResponse) {
                 console.log(newsResponse);
                displayNews(newsResponse);
             });
     }
-    
+
      function displayNews(newsResponse){
          // Creating news wrapper to overwrite HTML every time new zip is made
          let newsWrapper = $("<div/>");
         newsWrapper.addClass("news-Wrapper");
 
-        for(var i = 0; i < 5; i++){  
+        for(var i = 0; i < 5; i++){
         if(deBugger){console.log("this news loop is running")};
         // The list item that will house everything
         var newsDiv = $("<li>");
@@ -141,7 +148,7 @@ var mainApp = {};
         newsDiv.append(newsItem);
         // populate the newsWrapper
         newsWrapper.append(newsDiv);
-    
+
         }
 
     // overwrite old news when zip is updated
@@ -154,7 +161,7 @@ var mainApp = {};
             console.log(postal);
             $('.zip-input').attr("placeholder", "Current Zip: " + postal);
         }
-        
+
 
     // set postal as a temp variable
     let zipChange = () => {
@@ -226,9 +233,9 @@ var mainApp = {};
             uid,
             postal,
         });
-        
+
     }
-    
+
     // finds key to current UID
     let keyFinder = () => {
         dbr.orderByChild("uid").equalTo(uid).on("value", (snap) => {
@@ -243,7 +250,7 @@ var mainApp = {};
         setTimeout(() => {
             dbKeyChecker();
         }, 500);
-        
+
     }
 
     // checks if youre in the db already
@@ -251,12 +258,12 @@ var mainApp = {};
         if(!uidState){
             pullPostal();
             setTimeout(() => {
-                pushDB();    
+                pushDB();
             }, 500);
         }
     }
 
-  
+
     //capture the users IP address and utilize it to pull news and weather
 let pullPostal = () => {
     console.log("Zipcode Pulled from IP via ipinfo.io");

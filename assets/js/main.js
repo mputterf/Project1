@@ -26,7 +26,7 @@ var mainApp = {};
             //delay necessary due to the time it takes for the other functions to run
             setTimeout(() => {
                 displayName();
-                zreturn();   
+                zreturn();
                 getWeather();
               getNews();
             }, 1000);
@@ -51,8 +51,12 @@ var mainApp = {};
     function displayName(){
 
         var newDiv = $("<div>");
-        newDiv.append("Welcome " + userName + " Your Zipcode is " + postal);
+        newDiv.attr("id", "welcome");
+        newDiv.text("Welcome " + userName + " Your Zipcode is " + postal);
         $(".mainContent").append(newDiv);
+        var space = $("<br><br>");
+        $("#welcome").append(space);
+
 
     }
 
@@ -169,7 +173,7 @@ var mainApp = {};
         // populate the newsWrapper
         newsWrapper.append(newsDiv);
         }
-    
+
 
     // overwrite old news when zip is updated
         $(".news").html(newsWrapper);
@@ -177,12 +181,23 @@ var mainApp = {};
     }
 
 
+    // Job search api
+    // $(document).on("click", "#job-search-button", function(){
+    //   console.log("Job Search clicked!");
+    //
+    //   var jobSearchDiv = $("<div>");
+    //   jobSearchDiv.text("text was successful");
+    //
+    //   $(".mainContent").append(jobSearchDiv);
+    // });
+
+
     // sets placeholder as your zip
         let zreturn = () => {
             console.log(postal);
             $('.zip-input').attr("placeholder", "Current Zip: " + postal);
         }
-        
+
 
     // set postal as a temp variable
     let zipChange = () => {
@@ -277,7 +292,7 @@ var mainApp = {};
         if(!uidState){
             pullPostal();
             setTimeout(() => {
-                pushDB();    
+                pushDB();
             }, 500);
         }
     }
@@ -295,7 +310,3 @@ var mainApp = {};
     }
 
 })()
-
-    
-
-    

@@ -55,7 +55,7 @@ body{
         font-size: 12px;
     }
 }
-@media (max-width: 575px) {
+@media (max-width: 768px) {
     
     .weather-wrapper{
         display: grid;

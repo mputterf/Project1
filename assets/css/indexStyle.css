@@ -1,0 +1,30 @@
+.container{
+    margin: auto;
+    width:100%;
+}
+.row{
+    margin:auto;
+    width:100%;
+}
+.auth{
+    margin-top: 90px;
+    background: #666;
+    padding: 30px;
+    border-radius: 15px 50px 30px;
+    box-shadow: 0 5px 40px 2px rgba(155,155,155,1);
+}
+.login{
+    margin: auto;
+    width:100%;
+    border: 3px #4aaaa5 solid;
+
+
+}
+.primary-text{
+    color:#56a79a;
+}
+#loader{
+    color:#fff;
+}
+#navbar li a:hover { color: #4aaaa5; }
+#navbar li a:active { color: #4aaaa5; }

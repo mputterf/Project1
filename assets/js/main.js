@@ -56,7 +56,8 @@ var mainApp = {};
         $(".mainContent").append(newDiv);
         var space = $("<br><br>");
         $("#welcome").append(space);
-        var contentDiv = $("<div id=main-content>");
+        var contentDiv = $("<div>");
+        contentDiv.attr("id", "main-content");
         $("#welcome").append(contentDiv);
 
     }

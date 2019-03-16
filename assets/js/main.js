@@ -20,7 +20,7 @@ var mainApp = {};
             uid = user.uid;
             userName = user.displayName;
 
-
+            myAccount("");
             zipChange();
             keyFinder();
             //delay necessary due to the time it takes for the other functions to run
@@ -292,6 +292,71 @@ var mainApp = {};
                 console.log(response);
             };
         }, "jsonp");
+    }
+
+    let myAccount = (id) => {
+        $("#myAccount").on("click", function () {
+            let body = $("nav, section, footer");
+            body.css({
+                "opacity": ".5",
+                "pointer-events": "none",
+            });
+            let tempW = $("<div/>");
+            tempW.css({
+               
+                "pointer-events": "auto",
+                "position": "absolute",
+                "top": "calc(50% - 200px)",
+                "left": "calc(50% - 400px)",
+                "opacity": "1",
+            });
+            
+            tempW.addClass("error");
+            let temp = $("<div/>");
+            temp.css({
+                "position" : "relative",
+                "display": "grid",
+                "justify-items": "center",
+                "align-items": "center",
+                "z-index": "99",
+                "width": "800px",
+                "height": "400px",
+                "background-color": "rgba(75, 170, 165, .9)",
+                "color": "black",
+                "font-family": "Arial, Helvetica, sans-serif;",
+                "font-weight": "bolder",
+                "border": "2px inset grey",
+                "border-radius": "10px",
+                "font-size": "30px",
+                "text-align": "center"
+            });
+            let tempP = $("<p/>");
+            let close = $("<div/>");
+            close.text("x");
+            close.css({
+                "position": "absolute",
+                "top": "30px",
+                "right": "30px",
+                "font-family": "Arial, Helvetica, sans-serif;",
+                "font-weight": "bold",
+                "font-size": "50px",
+                "color": "grey",
+                "width": "50px",
+                "height": "50px"
+            });
+            close.attr("id", "close");
+            tempP.text(id);
+            temp.append(tempP).append(close);
+            tempW.append(temp);
+            $("body").append(tempW).on("click", "#close", function () {
+                $(this).parent().parent().remove();
+                body.css({
+                    "opacity": "1",
+                    "pointer-events": "auto",
+                });
+            });
+        });
+
     }
 
 })()

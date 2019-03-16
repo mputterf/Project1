@@ -15,9 +15,23 @@ body{
     width:100%;
 
 }
-.card{
-    margin-top: 15px;
+
+.clearfix{
+  overflow: auto;
 }
+
+.news-img{
+  width: 100px;
+  height: 100px;
+  float: left;
+  padding-right: 5px;
+}
+
+.news-data{
+  clear: left;
+  padding: 5px;
+}
+
 .news{
     margin: auto;
     width:100%;
@@ -163,8 +177,9 @@ padding-bottom: 3px;
 
 .weather-card{
   width: 200px;
-  /* float: left; */
 }
+
+
 @media (min-width: 1900px){
 
     .container {

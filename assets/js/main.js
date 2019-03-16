@@ -57,10 +57,10 @@ var mainApp = {};
     }
 
     function getWeather() {
-        var apiKey = '9602d3b72d584a3fad8204559191503';
+        var weatherAPIKey = '9602d3b72d584a3fad8204559191503';
         // Max days to return is 10 days according to the docs
         var forecastDays = 5;
-        var queryURL = 'https://api.apixu.com/v1/forecast.json?key=' + apiKey + '&q=' + postal + '&days=' + forecastDays;
+        var queryURL = 'https://api.apixu.com/v1/forecast.json?key=' + weatherAPIKey + '&q=' + postal + '&days=' + forecastDays;
         $.ajax({
             url: queryURL,
             method: "GET"
@@ -78,6 +78,7 @@ var mainApp = {};
       // Creating weather wrapper to overwrite HTML every time new zip is made
       let weatherWrapper = $("<div/>");
       weatherWrapper.addClass("weather-wrapper");
+      // Boostrap card deck so the weather cards line up horizontally
       weatherWrapper.addClass("card-deck");
 
       for (var i=0; i<results.length; i++){
@@ -85,7 +86,7 @@ var mainApp = {};
         var weatherDiv = $("<div>");
 
         // give it a boostrap card for a boarder
-        weatherDiv.addClass("card");
+        weatherDiv.addClass("card mt-3 mb-3");
         // Own class for the card
         weatherDiv.addClass("weather-card");
         // Give the data a class.
@@ -93,7 +94,7 @@ var mainApp = {};
         // Give each forecast an id
         weatherDiv.attr("id", "weather-forecast-" + i);
         // Display the date and time the forecast is for.
-        weatherDiv.append("<p class=weather-info> Date: " + moment(results[i].date).format('dddd') + "</p>");
+        weatherDiv.append("<p class=weather-info>" + moment(results[i].date).format('ddd') + "</p>");
         // Display high for the day
         weatherDiv.append("<p class=weather-info> High: " + parseInt(results[i].day.maxtemp_f) + "°F </p>");
         // Display low for the day
@@ -112,14 +113,14 @@ var mainApp = {};
     }
 
     function getNews(){
-            var apiKey = 'ff02f8fa534944bdabc33f466133f39a';
-            var queryURL = 'https://newsapi.org/v2/top-headlines?country=us&apiKey=ff02f8fa534944bdabc33f466133f39a';
+            var newsAPIKey = 'ff02f8fa534944bdabc33f466133f39a';
+            var queryURL = 'https://newsapi.org/v2/top-headlines?country=us&apiKey=' + newsAPIKey;
             $.ajax({
                 url: queryURL,
                 method: "GET"
 
             }).then(function (newsResponse) {
-                console.log(newsResponse);
+                console.log("news object", newsResponse);
                displayNews(newsResponse);
             });
     }
@@ -132,9 +133,17 @@ var mainApp = {};
         for(var i = 0; i < 5; i++){
         if(deBugger){console.log("this news loop is running")};
         // The list item that will house everything
-        var newsDiv = $("<li>");
+        var newsDiv = $("<div>");
         // Store the link
         var newsItem = $("<a>");
+        // thumbnail
+        var newsImage = $("<img>");
+        // assign a news image class
+        newsImage.addClass("news-img");
+        // set img source
+        newsImage.attr("src", newsResponse.articles[i].urlToImage);
+        // clear fix for the thumbnails
+        newsDiv.addClass("clearfix");
         // Giving each news item the class and an id
         newsDiv.addClass("news-data");
         newsDiv.attr("id", "news-headlines-" + i);
@@ -144,6 +153,8 @@ var mainApp = {};
         newsItem.attr("target", "_blank");
         // So the user sees the article title
         newsItem.text(newsResponse.articles[i].title)
+        // append the thumbnail to the new list item
+        newsDiv.append(newsImage);
         // append the link to the new list item
         newsDiv.append(newsItem);
         // populate the newsWrapper

@@ -15,17 +15,33 @@ body{
     width:100%;
 
 }
-.card{
-    margin-top: 15px;
+
+.clearfix{
+  overflow: auto;
 }
-.news{
+
+.news-img{
+  width: 100px;
+  height: 100px;
+  float: left;
+  padding-right: 5px;
+}
+
+.news-data{
+  clear: left;
+  padding: 5px;
+}
+
+.news-Wrapper{
     margin: auto;
     width:100%;
     border: 1px solid #888;
     box-shadow: 0 5px 40px 2px rgba(155,155,155,1);
+    max-height: 313px;
+    overflow-y: auto;
 }
 
-.weather{
+.weather-wrapper{
         margin: auto;
         width:100%;
         border: 1px solid #888;
@@ -163,8 +179,9 @@ padding-bottom: 3px;
 
 .weather-card{
   width: 200px;
-  /* float: left; */
 }
+
+
 @media (min-width: 1900px){
 
     .container {

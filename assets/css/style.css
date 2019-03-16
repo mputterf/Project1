@@ -32,14 +32,16 @@ body{
   padding: 5px;
 }
 
-.news{
+.news-Wrapper{
     margin: auto;
     width:100%;
     border: 1px solid #888;
     box-shadow: 0 5px 40px 2px rgba(155,155,155,1);
+    max-height: 313px;
+    overflow-y: auto;
 }
 
-.weather{
+.weather-wrapper{
         margin: auto;
         width:100%;
         border: 1px solid #888;

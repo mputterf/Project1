@@ -85,8 +85,17 @@ var mainApp = {};
         // Create new div for each forecast
         var weatherDiv = $("<div>");
 
+        //weatherDiv Styling
+        weatherDiv.css({
+            "width": "calc(100% - 10px)",
+            "margin": "5px",
+            "display": "grid",
+            "align-items": "center",
+            "justify-items": "center",
+        });
+
         // give it a boostrap card for a boarder
-        weatherDiv.addClass("card mt-3 mb-3");
+        weatherDiv.addClass("card");
         // Own class for the card
         weatherDiv.addClass("weather-card");
         // Give the data a class.

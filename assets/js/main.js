@@ -26,7 +26,7 @@ var mainApp = {};
             //delay necessary due to the time it takes for the other functions to run
             setTimeout(() => {
                 displayName();
-                zreturn();
+                zreturn();   
                 getWeather();
               getNews();
             }, 1000);
@@ -159,20 +159,21 @@ var mainApp = {};
         newsDiv.append(newsItem);
         // populate the newsWrapper
         newsWrapper.append(newsDiv);
-
         }
+    
 
     // overwrite old news when zip is updated
         $(".news").html(newsWrapper);
         console.log("news Updated");
     }
 
+
     // sets placeholder as your zip
         let zreturn = () => {
             console.log(postal);
             $('.zip-input').attr("placeholder", "Current Zip: " + postal);
         }
-
+        
 
     // set postal as a temp variable
     let zipChange = () => {
@@ -244,7 +245,6 @@ var mainApp = {};
             uid,
             postal,
         });
-
     }
 
     // finds key to current UID
@@ -261,7 +261,6 @@ var mainApp = {};
         setTimeout(() => {
             dbKeyChecker();
         }, 500);
-
     }
 
     // checks if youre in the db already
@@ -269,22 +268,25 @@ var mainApp = {};
         if(!uidState){
             pullPostal();
             setTimeout(() => {
-                pushDB();
+                pushDB();    
             }, 500);
         }
     }
 
-
     //capture the users IP address and utilize it to pull news and weather
-let pullPostal = () => {
-    console.log("Zipcode Pulled from IP via ipinfo.io");
-    $.get("https://ipinfo.io", function (response) {
-        postal = response.postal;
-        countryCode = response.country;
-        if (deBugger) {
-            console.log(response);
-        };
-    }, "jsonp");
-}
+    let pullPostal = () => {
+        console.log("Zipcode Pulled from IP via ipinfo.io");
+        $.get("https://ipinfo.io", function (response) {
+            postal = response.postal;
+            countryCode = response.country;
+            if (deBugger) {
+                console.log(response);
+            };
+        }, "jsonp");
+    }
 
 })()
+
+    
+
+    

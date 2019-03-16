@@ -56,7 +56,8 @@ var mainApp = {};
         $(".mainContent").append(newDiv);
         var space = $("<br><br>");
         $("#welcome").append(space);
-
+        var contentDiv = $("<div id=main-content>");
+        $("#welcome").append(contentDiv);
 
     }
 
@@ -188,7 +189,7 @@ var mainApp = {};
     //   var jobSearchDiv = $("<div>");
     //   jobSearchDiv.text("text was successful");
     //
-    //   $(".mainContent").append(jobSearchDiv);
+    //   $("#main-content").append(jobSearchDiv);
     // });
 
 

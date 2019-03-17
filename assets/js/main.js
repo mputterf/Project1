@@ -10,6 +10,7 @@ var mainApp = {};
     countryCode = "us";
     let uidState = false;
     deBugger = true;
+    var geocoder = new google.maps.Geocoder();
 
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
@@ -59,7 +60,92 @@ var mainApp = {};
         var contentDiv = $("<div>");
         contentDiv.attr("id", "main-content");
         $("#welcome").append(contentDiv);
+    }
 
+    $('#ticketmaster').click(function(){ loadSearch(); return false; });
+
+    // loads the search into the main content div
+    function loadSearch() {
+        var searchInput = $("<input type='text' name='searchfield'>");
+        $("#main-content").append(searchInput);
+        var space = $("<br><br>");
+        $("#main-content").append(space);
+        var searchButton = $("<button id='ticketmastersearch' type='button'>Search</button>");
+        $("#main-content").append(searchButton);
+    }
+
+    $(document).on("click","#ticketmastersearch", function () { 
+        convertZiptoLatLong();
+    });
+
+    //converts a zipcode to a latlong coordinate
+    function convertZiptoLatLong() {
+        var lat = '';
+        var lng = '';
+        var address = postal;
+        geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            lat = results[0].geometry.location.lat();
+            lng = results[0].geometry.location.lng();
+            var latlng = {lat, lng};
+            console.log("latlng: ", latlng);
+            // call google places here
+            ticketmaster(latlng);
+
+        } else {
+            console.log("Geocode was not successful for the following reason: " + status);
+        }
+        });
+        // if (deBugger) {
+        //     console.log('Latitude: ' + lat + ' Logitude: ' + lng);
+        // }
+    }
+
+    function ticketmaster(latlng) {
+        // googlePlaces
+        if (deBugger) {
+          console.log("latlng: ",latlng);
+        }
+        
+        let baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
+        let apiKey = 'AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI';
+        const keys = {
+            location:`${latlng.lat},${latlng.lng}`,
+            radius: 500,
+            types: 'cafe',
+            key: apiKey
+        };
+        $.ajax({
+            url: `${baseUrl}?location=${keys.location}&radius=${keys.radius}&types=${keys.types}&key=${keys.key}`,
+            method: "GET"
+
+        }).then(function (data) {
+            console.log("date - latlng: ", data);  
+        });
+        //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.1103407,-118.25850960000002&radius=500&types=cafe&key=AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI
+    }
+
+    function googlePlaces(latlng) {
+        // googlePlaces
+        console.log(latlng);
+        
+        let baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
+        let apiKey = 'AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI';
+        const keys = {
+            location:`${latlng.lat},${latlng.lng}`,
+            radius: 500,
+            types: 'cafe',
+            key: apiKey
+        };
+        $.ajax({
+            url: `${baseUrl}?location=${keys.location}&radius=${keys.radius}&types=${keys.types}&key=${keys.key}`,
+            method: "GET"
+
+        }).then(function (data) {
+            console.log(data);
+            
+        });
+        //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.1103407,-118.25850960000002&radius=500&types=cafe&key=AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI
     }
 
     function getWeather() {

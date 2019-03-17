@@ -268,15 +268,16 @@ var mainApp = {};
         // Give each forecast an id
         weatherDiv.attr("id", "weather-forecast-" + i);
         // Display the date and time the forecast is for.
+        weatherDiv.append("<img class=weather-condition src=https:" + results[i].day.condition.icon + " >");
         weatherDiv.append("<p class=weather-info>" + moment(results[i].date).format('ddd') + "</p>");
         // Display high for the day
         weatherDiv.append("<p class=weather-info> High: " + parseInt(results[i].day.maxtemp_f) + "°F </p>");
         // Display low for the day
         weatherDiv.append("<p class=weather-info> Low: " + parseInt(results[i].day.mintemp_f) + "°F </p>");
         // Display wind speed
-        weatherDiv.append("<p class=weather-info> Wind Speed: " + parseInt(results[i].day.maxwind_mph) + "mph </p>");
-        // Weather condition
-        weatherDiv.append("<img class=weather-condition src=https:" + results[i].day.condition.icon + " >");
+        // weatherDiv.append("<p class=weather-info> Wind Speed: " + parseInt(results[i].day.maxwind_mph) + "mph </p>");
+        // // Weather condition
+  
         // populate the weatherWrapper
         weatherWrapper.append(weatherDiv);
       }
@@ -311,13 +312,13 @@ var mainApp = {};
         // Store the link
         var newsItem = $("<a>");
         // thumbnail
-        var newsImage = $("<img>");
+         var newsImage = $("<img>");
         // assign a news image class
-        newsImage.addClass("news-img");
+         newsImage.addClass("news-img");
         // set img source
-        newsImage.attr("src", newsResponse.articles[i].urlToImage);
+         newsImage.attr("src", newsResponse.articles[i].urlToImage);
         // clear fix for the thumbnails
-        newsDiv.addClass("clearfix");
+         newsDiv.addClass("clearfix");
         // Giving each news item the class and an id
         newsDiv.addClass("news-data");
         newsDiv.attr("id", "news-headlines-" + i);
@@ -367,7 +368,11 @@ var mainApp = {};
                 postal = zi;
                 getWeather();
                 getNews();
-                console.log(postal);
+                $("#welcome").remove();
+                displayName();
+                if (deBugger){
+                    console.log(postal);
+                }
         });
     }
 

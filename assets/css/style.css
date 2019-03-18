@@ -195,20 +195,6 @@ padding-bottom: 3px;
     margin-top: 15px;
 }
 
-/* MY ACCOUNT */
-body .account{
-    grid-template-columns: 1fr 2fr;
-    grid-template-rows: repeat(3, 1fr);
-    grid-gap: 20px;
-
-    grid-row: 3fr;
-    grid-column: 1fr;
-
-    grid-row: 1fr;
-    grid-column: 2fr;
-}
-
-
 /* MEDIA QUERRIES */
 @media (min-width: 1900px){
 

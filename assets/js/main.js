@@ -10,6 +10,7 @@ var mainApp = {};
     countryCode = "us";
     let uidState = false;
     deBugger = true;
+    var geocoder = new google.maps.Geocoder();
 
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
@@ -56,9 +57,169 @@ var mainApp = {};
         $(".mainContent").append(newDiv);
         var space = $("<br><br>");
         $("#welcome").append(space);
-
+        var contentDiv = $("<div>");
+        contentDiv.attr("id", "main-content");
+        $("#welcome").append(contentDiv);
 
     }
+
+    $('#ticketmaster').click(function(){ loadSearch(); return false; });
+
+    // loads the search into the main content div
+    function loadSearch() {
+        $("#welcome").empty();
+        var searchInput = $("<input type='text' name='searchfield'>");
+        $("#welcome").append(searchInput);
+        var space = $("<br><br>");
+        $("#welcome").append(space);
+        var searchButton = $("<button id='ticketmastersearch' type='button'>Search</button>");
+        $("#welcome").append(searchButton);
+    }
+
+    $(document).on("click","#ticketmastersearch", function () { 
+        convertZiptoLatLong();
+    });
+
+    function convertZiptoLatLong() {
+        var lat = '';
+        var lng = '';
+        var address = postal;
+        geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            lat = results[0].geometry.location.lat();
+            lng = results[0].geometry.location.lng();
+            var latlng = {lat, lng};
+            if (deBugger) {
+                console.log("latlng: ", latlng);
+            }
+            // call ticketmaster here
+            getTicketmasterEvents(latlng);
+        } else {
+            console.log("Geocode was not successful for the following reason: " + status);
+        }
+        });
+    }
+
+    function googlePlaces(latlng) {
+        // googlePlaces
+        if (deBugger) {
+           console.log(latlng);
+        }
+        
+        let baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
+        let apiKey = 'AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI';
+        const keys = {
+            location:`${latlng.lat},${latlng.lng}`,
+            radius: 500,
+            types: 'cafe',
+            key: apiKey
+        };
+        $.ajax({
+            url: `${baseUrl}?location=${keys.location}&radius=${keys.radius}&types=${keys.types}&key=${keys.key}`,
+            method: "GET"
+
+        }).then(function (data) {
+            console.log(data);    
+        });
+        //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.1103407,-118.25850960000002&radius=500&types=cafe&key=AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI
+    }
+
+    //uses link #2
+    function getTicketmasterEvents(latlng) {
+        if (deBugger) {
+            console.log(latlng);
+         }
+        //https://developer.ticketmaster.com/api-explorer/v2/
+        //SB: 41.7132821, -86.21076719999996
+        //LA: 4.1103407,-118.25850960000002
+        
+        //https://app.ticketmaster.com/discovery/v2/events?apikey=BHuf4uL2WnsQL8kxNUsmYVVLnoKKAAE9&latlong=41.7132821,-86.21076719999996&radius=115&unit=miles&page=1&sort=name,date,asc&countryCode=US
+        //TODO: have user put key in search field and search for that
+        //TODO: display all results on a page - display more result items like picture, etc
+        //TODO: what if you have more than 20 results? pages
+        //TODO: make it all fit in the height of the maincontent tag
+        let baseUrl = 'https://app.ticketmaster.com/discovery/v2/events';
+        let apiKey = 'BHuf4uL2WnsQL8kxNUsmYVVLnoKKAAE9';
+        const keys = {
+            latlong:`${latlng.lat},${latlng.lng}`,
+            radius: 115,
+            unit: "miles",
+            pages: 1,
+            key: apiKey,
+            sort: "name,date,asc",
+            countryCode: "US"
+        };
+        if (deBugger) {
+            console.log(`${baseUrl}?apikey=${keys.key}&latlong=${keys.latlong}&radius=${keys.radius}&unit=${keys.unit}&pages=${keys.pages}&sort=${keys.sort}&countryCode=${keys.countryCode}`);
+        }
+        $.ajax({
+            url: `${baseUrl}?apikey=${keys.key}&latlong=${keys.latlong}&radius=${keys.radius}&unit=${keys.unit}&pages=${keys.pages}&sort=${keys.sort}&countryCode=${keys.countryCode}`,
+            method: "GET"
+        }).then(function (data) {
+            if (deBugger) {
+                console.log(data);
+                console.log(data._embedded.events[0].name);
+            }
+            displyTicketmasterResults(data);
+        });
+    }
+
+    function displyTicketmasterResults(results) {
+        $("#welcome").empty();
+        //results._embedded.events gives an array, so stuff in results is an array and should be accessed with results[i]
+      var results = results._embedded.events;
+
+      // Creating weather wrapper to overwrite HTML every time new zip is made
+      let ticketmasterWrapper = $("<div/>");
+      //ticketmasterDiv Styling
+      ticketmasterWrapper.css({
+        //"width": "calc(100% - 50px)",
+        "margin": "5px",
+        //"display": "grid",
+        "text-align": "left",
+        //"justify-items": "left",
+    });
+
+      ticketmasterWrapper.addClass("ticketmaster-wrapper");
+      // Boostrap card deck so the weather cards line up horizontally
+      ticketmasterWrapper.addClass("card");
+      ticketmasterWrapper.addClass("text-success");
+
+      // Card header
+      let ticketmasterEventsTextDiv = $("<div/>");
+      ticketmasterEventsTextDiv.addClass("card-header");
+      ticketmasterEventsTextDiv.text("Ticketmaster Events Near You");
+      ticketmasterWrapper.append(ticketmasterEventsTextDiv);
+
+      let resultsList = $("<ul>");
+      resultsList.addClass("list-group");
+      resultsList.addClass("list-group-flush");
+
+      //should the be the top 20 events
+      for (var i=0; i<results.length; i++){
+        // Create new div for each forecast
+        var listItemDiv = $("<li>");
+        listItemDiv.addClass("list-group-item");
+        listItemDiv.attr("id", "ticketmaster-event-" + i);
+        // Display the name of the event
+        listItemDiv.text(results[i].name);
+  
+        // populate the ticketmasterWrapper
+        ticketmasterWrapper.append(listItemDiv);
+      }
+
+      // overwrite main content div
+      $("#welcome").append(ticketmasterWrapper);
+      console.log("Ticket Event Updated");
+    }
+
+
+    function sleep(delay) {
+        var start = new Date().getTime();
+        while (new Date().getTime() < start + delay);
+    }
+
+
 
     function getWeather() {
         var weatherAPIKey = '9602d3b72d584a3fad8204559191503';
@@ -107,15 +268,16 @@ var mainApp = {};
         // Give each forecast an id
         weatherDiv.attr("id", "weather-forecast-" + i);
         // Display the date and time the forecast is for.
+        weatherDiv.append("<img class=weather-condition src=https:" + results[i].day.condition.icon + " >");
         weatherDiv.append("<p class=weather-info>" + moment(results[i].date).format('ddd') + "</p>");
         // Display high for the day
         weatherDiv.append("<p class=weather-info> High: " + parseInt(results[i].day.maxtemp_f) + "°F </p>");
         // Display low for the day
         weatherDiv.append("<p class=weather-info> Low: " + parseInt(results[i].day.mintemp_f) + "°F </p>");
         // Display wind speed
-        weatherDiv.append("<p class=weather-info> Wind Speed: " + parseInt(results[i].day.maxwind_mph) + "mph </p>");
-        // Weather condition
-        weatherDiv.append("<img class=weather-condition src=https:" + results[i].day.condition.icon + " >");
+        // weatherDiv.append("<p class=weather-info> Wind Speed: " + parseInt(results[i].day.maxwind_mph) + "mph </p>");
+        // // Weather condition
+  
         // populate the weatherWrapper
         weatherWrapper.append(weatherDiv);
       }
@@ -150,13 +312,13 @@ var mainApp = {};
         // Store the link
         var newsItem = $("<a>");
         // thumbnail
-        var newsImage = $("<img>");
+         var newsImage = $("<img>");
         // assign a news image class
-        newsImage.addClass("news-img");
+         newsImage.addClass("news-img");
         // set img source
-        newsImage.attr("src", newsResponse.articles[i].urlToImage);
+         newsImage.attr("src", newsResponse.articles[i].urlToImage);
         // clear fix for the thumbnails
-        newsDiv.addClass("clearfix");
+         newsDiv.addClass("clearfix");
         // Giving each news item the class and an id
         newsDiv.addClass("news-data");
         newsDiv.attr("id", "news-headlines-" + i);
@@ -188,7 +350,7 @@ var mainApp = {};
     //   var jobSearchDiv = $("<div>");
     //   jobSearchDiv.text("text was successful");
     //
-    //   $(".mainContent").append(jobSearchDiv);
+    //   $("#main-content").append(jobSearchDiv);
     // });
 
 
@@ -206,7 +368,11 @@ var mainApp = {};
                 postal = zi;
                 getWeather();
                 getNews();
-                console.log(postal);
+                $("#welcome").remove();
+                displayName();
+                if (deBugger){
+                    console.log(postal);
+                }
         });
     }
 

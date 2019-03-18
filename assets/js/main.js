@@ -358,7 +358,7 @@ var mainApp = {};
 
     // sets placeholder as your zip
         let zreturn = () => {
-            console.log(postal);
+            console.log("Z RETURN HAS RUN AND THE POSTAL CODE IS : " + postal);
             $('.zip-input').attr("placeholder", "Current Zip: " + postal);
             $(".zip-input").css("font-size", "12px");
         }
@@ -373,10 +373,7 @@ var mainApp = {};
                 let zi = zinput.val().trim();
                 postal = zi;
                 zinput.val("");
-                getWeather();
-                getNews();
-                $("#welcome").remove();
-                displayName();
+               refresh();
                 if (deBugger){
                     console.log(postal);
                 }
@@ -389,15 +386,21 @@ var mainApp = {};
                 let zi = zinput.val().trim();
                 postal = zi;
                 zinput.val("");
-                getWeather();
-                getNews();
-                $("#welcome").remove();
-                displayName();
+                refresh();
                 if (deBugger){
                     console.log(postal);
                 }
             }
         });
+    }
+
+    //function to refresh weather, news, welcome
+    let refresh = () => {
+        getWeather();
+        getNews();
+        zreturn();
+        $("#welcome").remove();
+        displayName();
     }
 
     //error function to display prompt
@@ -659,23 +662,37 @@ var mainApp = {};
             close.attr("id", "close");
             temp.append(tempH).append(tempD).append(close);
             tempW.append(temp);
-            b.append(tempW).on("click", "#close", function () {
+
+            b.append(tempW);
+
+            b.on("click", "#close", function () {
                 $(this).parent().parent().remove();
                 body.css({
                     "opacity": "1",
                     "pointer-events": "auto",
                 });
             });
+
             b.on("click", "#account-update", function() {
-                dbr.child(uidKey).set({
-                    postal: $("#zip-update").val().trim(),
-                    uid,
-                });
-                $(this).parent().parent().parent().parent().remove();
-                body.css({
-                    "opacity": "1",
-                    "pointer-events": "auto",
-                });
+                if(zip.val().length === 5){
+                    postal = zip.val();
+                
+                    console.log("THE UID KEY IS:   " + uidKey);
+                    dbr.child(uidKey).set({
+                        postal: zip.val(),
+                        uid,
+                    });
+                    $(this).parent().parent().parent().parent().remove();
+                    body.css({
+                        "opacity": "1",
+                        "pointer-events": "auto",
+                    });
+                   
+                    refresh();
+                }
+                else{
+                    //error("INVALID INPUT");
+                }
             });
         });
     }

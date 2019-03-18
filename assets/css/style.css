@@ -182,7 +182,6 @@ padding-bottom: 3px;
 .weather-info{
     text-align: center;
 }
-
 .weather-condition{
     width: 45px;
     height: 45px;
@@ -194,8 +193,21 @@ padding-bottom: 3px;
 
 .ticketmaster-wrapper{
     margin-top: 15px;
-
 }
+
+/* MY ACCOUNT */
+body .account{
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: repeat(3, 1fr);
+    grid-gap: 20px;
+
+    grid-row: 3fr;
+    grid-column: 1fr;
+
+    grid-row: 1fr;
+    grid-column: 2fr;
+}
+
 
 /* MEDIA QUERRIES */
 @media (min-width: 1900px){
@@ -216,7 +228,6 @@ padding-bottom: 3px;
     }
 }
 @media (max-width: 768px) {
-    
     .weather-wrapper{
         display: grid;
         line-height: .5em;

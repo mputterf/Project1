@@ -20,10 +20,11 @@ var mainApp = {};
             };
             uid = user.uid;
             userName = user.displayName;
-
+            //functions to execute upon page load
             myAccount(userName);
             zipChange();
             keyFinder();
+
             //delay necessary due to the time it takes for the other functions to run
             setTimeout(() => {
                 displayName();
@@ -510,14 +511,21 @@ var mainApp = {};
                
                 "pointer-events": "auto",
                 "position": "absolute",
-                "top": "calc(50% - 200px)",
-                "left": "calc(50% - 400px)",
+                "top": "calc(50% - 225px)",
+                "left": "calc(50% - 425px)",
+                "width": "850px",
+                "height": "450px",
+                "box-shadow": "0 5px 40px 2px rgba(155,155,155,1)",
+                "background-color": "rgba(102, 102, 102, .85)",
+                "border-radius": "15px 50px 30px",
                 "opacity": "1",
             });
             
-            tempW.addClass("error");
+            tempW.addClass("account");
             let temp = $("<div/>");
             temp.css({
+                "top": "calc(50% - 200px)",
+                "left": "calc(50% - 400px)",
                 "position" : "relative",
                 "display": "grid",
                 "justify-items": "center",
@@ -525,18 +533,111 @@ var mainApp = {};
                 "z-index": "99",
                 "width": "800px",
                 "height": "400px",
-                "background-color": "rgba(75, 170, 165, .9)",
+                "padding": "30px",
+                "border-radius": "0",
+                "box-shadow": "0 5px 40px 2px rgba(155,155,155,1)",
+                "background-color": "rgba(255, 255, 255, .9)",
                 "color": "black",
                 "font-family": "Arial, Helvetica, sans-serif;",
                 "font-weight": "bolder",
-                "border": "2px inset grey",
-                "border-radius": "10px",
+                "border": "3px rgba(74, 170, 165, .9) solid",
                 "font-size": "30px",
                 "text-align": "center"
             });
             let tempH = $("<h2/>");
             let tempD = $("<div/>");
             let close = $("<div/>");
+            let pdiv = $("<div/>");
+            let idiv = $("<div/>");
+            let img = $("<img/>");
+            let email = $("<input/>");
+            let zip = $("<input/>");
+            let pw = $("<input/>");
+            let sub = $("<button> Update </button>");
+            tempH.text("My Accounts Settings for " + id);
+            tempD.css({
+                "display": "grid",
+                "grid-template-columns": "1fr 2fr",
+                "grid-template-rows": "90%",
+                "grid-gap": "10px",
+                "width": "100%",
+                "height": "100%",
+            });
+            img.attr(
+                'src', "assets/img/unknownProfile.jpg").css({
+                "width": "200px",
+                "height": "200px",
+            });
+            pdiv.css({
+                "grid-row": "1/1",
+                "grid-column": "1/1",
+                "justify-self": "center",
+                "align-self": "center",
+            }).append(img);
+            email.attr({
+                "type": "email",
+                "placeholder": "   example@email.com",
+            }).css({
+                "font-size": "15px",
+                "color": "rgba(74, 170, 165, .9)",
+                "width": "400px",
+                "height": "30px",
+            });
+            pw.attr({
+                "type": "text",
+                "placeholder": "   Password",
+            }).css({
+                "font-size": "15px",
+                "color": "rgba(74, 170, 165, .9)",
+                "width": "400px",
+                "height": "30px",
+            });
+            zip.attr({
+                "type": "text",
+                "maxlength": "5",
+                "placeholder": "   " + postal,
+            }).css({
+                "font-size": "15px",
+                "color": "rgba(74, 170, 165, .9)",
+                "width": "400px",
+                "height": "30px",
+            });
+            sub.attr({
+                "type": "submit",
+                "id": "account-update",
+            }).css({
+                "box-shadow": "0 5px 10px 2px rgba(155,155,155,1)",
+                "background-color": "rgba(255, 255, 255, .9)",
+                "color": "black",
+                "font-family": "Arial, Helvetica, sans-serif;",
+                "font-weight": "bolder",
+                "border": "3px rgba(74, 170, 165, .9) solid",
+                "border-radius": "15px 50px 30px",
+                "font-size": "15px",
+                "margin": "25px 0 10px auto",
+                "width": "100px",
+                "height": "35px",
+                "display": "block",
+                "text-align": "center",
+            });
+            idiv.css({
+                "grid-row": "1/1",
+                "grid-column": "2/2",
+                "justify-self": "left",
+                "align-self": "center",
+                "text-align": "left",
+                "font-family": "Arial, Helvetica, sans-serif;",
+                "font-weight": "bold",
+                "font-size": "20px",
+                "margin": "20px auto"
+            });
+            pdiv.append(img);
+            idiv.append("<p style = 'margin: 10px auto;'>Change Email</p>").append(email);
+            idiv.append("<p style = 'margin: 10px auto;'>Change Password</p>").append(pw);
+            idiv.append("<p style = 'margin: 10px auto;'>Change Zip Code</p>").append(zip);
+            idiv.append(sub);
+            tempD.append(pdiv);
+            tempD.append(idiv)
             close.text("x");
             close.css({
                 "position": "absolute",
@@ -547,13 +648,10 @@ var mainApp = {};
                 "font-size": "50px",
                 "color": "grey",
                 "width": "50px",
-                "height": "50px"
+                "height": "50px",
+                "cursor": "crosshair",
             });
             close.attr("id", "close");
-            tempH.text("My Accounts Settings for " + id);
-            tempD.append("<img src = 'assets/img/unknownProfile.jpg' " +
-            "style='width: 100px; height: 100px;'" +
-            ">");
             temp.append(tempH).append(tempD).append(close);
             tempW.append(temp);
             $("body").append(tempW).on("click", "#close", function () {
@@ -564,7 +662,6 @@ var mainApp = {};
                 });
             });
         });
-
     }
 
 })()

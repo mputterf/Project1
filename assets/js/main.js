@@ -53,7 +53,7 @@ var mainApp = {};
 
         var newDiv = $("<div>");
         newDiv.attr("id", "welcome");
-        newDiv.text("Welcome " + userName + " Your Zipcode is " + postal);
+        newDiv.text("Welcome " + userName + " the zip code you are viewing is " + postal);
         $(".mainContent").append(newDiv);
         var space = $("<br><br>");
         $("#welcome").append(space);
@@ -358,14 +358,19 @@ var mainApp = {};
         let zreturn = () => {
             console.log(postal);
             $('.zip-input').attr("placeholder", "Current Zip: " + postal);
+            $(".zip-input").css("font-size", "12px");
         }
 
 
     // set postal as a temp variable
     let zipChange = () => {
+        // for clicking the change zipcode button 
+        let zinput = $(".zip-input");
         $(".zip-btn").on("click", function() {
-            let zi = $(".zip-input").val().trim();
+            if(zinput.val().length === 5){
+                let zi = zinput.val().trim();
                 postal = zi;
+                zinput.val("");
                 getWeather();
                 getNews();
                 $("#welcome").remove();
@@ -373,6 +378,23 @@ var mainApp = {};
                 if (deBugger){
                     console.log(postal);
                 }
+            }
+        });
+        // for pressing enter inside the zipcode input
+        zinput.on("keypress", function(e) {
+            if(e.which == 13 && zinput.val().length === 5){
+                e.preventDefault();
+                let zi = zinput.val().trim();
+                postal = zi;
+                zinput.val("");
+                getWeather();
+                getNews();
+                $("#welcome").remove();
+                displayName();
+                if (deBugger){
+                    console.log(postal);
+                }
+            }
         });
     }
 
@@ -459,7 +481,7 @@ var mainApp = {};
             pullPostal();
             setTimeout(() => {
                 pushDB();
-            }, 500);
+            }, 800);
         }
     }
 
@@ -475,6 +497,7 @@ var mainApp = {};
         }, "jsonp");
     }
 
+    //open modal when clicking my account
     let myAccount = (id) => {
         $("#myAccount").on("click", function () {
             let body = $("nav, section, footer");

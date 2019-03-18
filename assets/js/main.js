@@ -20,7 +20,7 @@ var mainApp = {};
             uid = user.uid;
             userName = user.displayName;
 
-            myAccount("");
+            myAccount(userName);
             zipChange();
             keyFinder();
             //delay necessary due to the time it takes for the other functions to run
@@ -345,7 +345,8 @@ var mainApp = {};
                 "font-size": "30px",
                 "text-align": "center"
             });
-            let tempP = $("<p/>");
+            let tempH = $("<h2/>");
+            let tempD = $("<div/>");
             let close = $("<div/>");
             close.text("x");
             close.css({
@@ -360,8 +361,11 @@ var mainApp = {};
                 "height": "50px"
             });
             close.attr("id", "close");
-            tempP.text(id);
-            temp.append(tempP).append(close);
+            tempH.text("My Accounts Settings for " + id);
+            tempD.append("<img src = 'assets/img/unknownProfile.jpg' " +
+            "style='width: 100px; height: 100px;'" +
+            ">");
+            temp.append(tempH).append(tempD).append(close);
             tempW.append(temp);
             $("body").append(tempW).on("click", "#close", function () {
                 $(this).parent().parent().remove();

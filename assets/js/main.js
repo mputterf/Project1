@@ -9,6 +9,7 @@ var mainApp = {};
     var postal = "";
     countryCode = "us";
     let uidState = false;
+    let uidKey;
     deBugger = true;
     var geocoder = new google.maps.Geocoder();
 
@@ -464,7 +465,7 @@ var mainApp = {};
     let keyFinder = () => {
         dbr.orderByChild("uid").equalTo(uid).on("value", (snap) => {
             snap.forEach((child) => {
-                let uidKey = child.key;
+                uidKey = child.key;
                 console.log("this is the UID Key: " + uidKey);
                 console.log("Zipcode pulled from Firebase DB");
                 uidState = true;
@@ -544,6 +545,7 @@ var mainApp = {};
                 "font-size": "30px",
                 "text-align": "center"
             });
+            let b = $("body");
             let tempH = $("<h2/>");
             let tempD = $("<div/>");
             let close = $("<div/>");
@@ -577,6 +579,7 @@ var mainApp = {};
             email.attr({
                 "type": "email",
                 "placeholder": "   example@email.com",
+                "id": "email-update"
             }).css({
                 "font-size": "15px",
                 "color": "rgba(74, 170, 165, .9)",
@@ -586,6 +589,7 @@ var mainApp = {};
             pw.attr({
                 "type": "text",
                 "placeholder": "   Password",
+                "id": "pw-update",
             }).css({
                 "font-size": "15px",
                 "color": "rgba(74, 170, 165, .9)",
@@ -595,6 +599,7 @@ var mainApp = {};
             zip.attr({
                 "type": "text",
                 "maxlength": "5",
+                "id": "zip-update",
                 "placeholder": "   " + postal,
             }).css({
                 "font-size": "15px",
@@ -654,8 +659,19 @@ var mainApp = {};
             close.attr("id", "close");
             temp.append(tempH).append(tempD).append(close);
             tempW.append(temp);
-            $("body").append(tempW).on("click", "#close", function () {
+            b.append(tempW).on("click", "#close", function () {
                 $(this).parent().parent().remove();
+                body.css({
+                    "opacity": "1",
+                    "pointer-events": "auto",
+                });
+            });
+            b.on("click", "#account-update", function() {
+                dbr.child(uidKey).set({
+                    postal: $("#zip-update").val().trim(),
+                    uid,
+                });
+                $(this).parent().parent().parent().parent().remove();
                 body.css({
                     "opacity": "1",
                     "pointer-events": "auto",
@@ -663,5 +679,4 @@ var mainApp = {};
             });
         });
     }
-
 })()

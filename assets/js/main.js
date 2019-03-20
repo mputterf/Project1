@@ -167,7 +167,6 @@ var mainApp = {};
         convertZiptoLatLong();
     });
 
-    //Google geocoder api: AIzaSyBiI_6I3sbIYjPXsk5L0TtCO84DCdFQU0Y 
     function convertZiptoLatLong() {
         var lat = '';
         var lng = '';
@@ -262,6 +261,7 @@ var mainApp = {};
         });
     }
 
+
     //TODO: see what page we are on.  calculate total number of pages.  if there are more events, display a right chevron.  if we are on page > 0, diesplay a left chevron.  
     //TODO: when click on the event, then display details and have a back button as well.  
     //when a left chevron is clicked, go to the previous page, when a right chevron is clicked, go to the next page.   
@@ -296,6 +296,7 @@ var mainApp = {};
         var listItemDiv = $("<li>");
         listItemDiv.addClass("list-group-item");
         listItemDiv.attr("id", "ticketmaster-event-" + i);
+
         
         // Display the name of the event
         var nameDiv = $("<div>");
@@ -320,7 +321,7 @@ var mainApp = {};
         wrapperDiv.append(venueDiv);
         
         
-        //listItemDiv.text(results[i].name);
+        //listItemDiv.text(results[i].name)
   
         // populate the ticketmasterWrapper
         ticketmasterWrapper.append(listItemDiv);

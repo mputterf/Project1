@@ -8,6 +8,8 @@ var mainApp = {};
     var userName = "";
     var postal = "";
     countryCode = "us";
+    let userEmail = "";
+    let userPw = "";
     let uidState = false;
     let uidKey;
     deBugger = true;
@@ -22,6 +24,7 @@ var mainApp = {};
             };
             uid = user.uid;
             userName = user.displayName;
+
             //functions to execute upon page load
             
             myAccount(userName);
@@ -522,6 +525,9 @@ var mainApp = {};
         }, 3000);
     }
 
+    //ReAuth Functions
+ 
+
     //open modal when clicking my account
     let myAccount = (id) => {
         $("#myAccount").on("click", function () {
@@ -577,7 +583,8 @@ var mainApp = {};
             let img = $("<img/>");
             let email = $("<input/>");
             let zip = $("<input/>");
-            let pw = $("<input/>");
+            let oldpw = $("<input/>");
+            let newpw = $("<input/>");
             let sub = $("<button> Update </button>");
             tempH.text("My Accounts Settings for " + id);
             tempD.css({
@@ -608,16 +615,29 @@ var mainApp = {};
                 "color": "rgba(74, 170, 165, .9)",
                 "width": "400px",
                 "height": "30px",
+                "outline": "none",
             });
-            pw.attr({
+            oldpw.attr({
                 "type": "text",
-                "placeholder": "   Password",
+                "placeholder": "   Old Password",
+                "id": "old-pw",
+            }).css({
+                "font-size": "15px",
+                "color": "rgba(74, 170, 165, .9)",
+                "width": "400px",
+                "height": "30px",
+                "outline": "none",
+            });
+            newpw.attr({
+                "type": "text",
+                "placeholder": "   New Password",
                 "id": "pw-update",
             }).css({
                 "font-size": "15px",
                 "color": "rgba(74, 170, 165, .9)",
                 "width": "400px",
                 "height": "30px",
+                "outline": "none",
             });
             zip.attr({
                 "type": "text",
@@ -629,6 +649,7 @@ var mainApp = {};
                 "color": "rgba(74, 170, 165, .9)",
                 "width": "400px",
                 "height": "30px",
+                "outline": "none",
             });
             sub.attr({
                 "type": "submit",
@@ -642,11 +663,12 @@ var mainApp = {};
                 "border": "3px rgba(74, 170, 165, .9) solid",
                 "border-radius": "15px 50px 30px",
                 "font-size": "15px",
-                "margin": "25px 0 10px auto",
+                "margin": "10px 0 10px auto",
                 "width": "100px",
                 "height": "35px",
                 "display": "block",
                 "text-align": "center",
+                "outline": "none",
             });
             idiv.css({
                 "grid-row": "1/1",
@@ -656,13 +678,14 @@ var mainApp = {};
                 "text-align": "left",
                 "font-family": "Arial, Helvetica, sans-serif;",
                 "font-weight": "bold",
-                "font-size": "20px",
+                "font-size": "15px",
                 "margin": "20px auto"
             });
             pdiv.append(img);
-            idiv.append("<p style = 'margin: 10px auto;'>Change Email</p>").append(email);
-            idiv.append("<p style = 'margin: 10px auto;'>Change Password</p>").append(pw);
-            idiv.append("<p style = 'margin: 10px auto;'>Change Zip Code</p>").append(zip);
+            idiv.append("<p style = 'margin: 5px auto;'>Change Email</p>").append(email);
+            idiv.append("<p style = 'margin: 5px auto;'>Old Password</p>").append(oldpw);
+            idiv.append("<p style = 'margin: 5px auto;'>New Password</p>").append(newpw);
+            idiv.append("<p style = 'margin: 5px auto;'>Change Zip Code</p>").append(zip);
             idiv.append(sub);
             tempD.append(pdiv);
             tempD.append(idiv)
@@ -694,26 +717,71 @@ var mainApp = {};
             });
 
             b.on("click", "#account-update", function() {
+                
+                //zipcode Update
                 if(zip.val().length === 5){
                     postal = zip.val();
                 
                     console.log("THE UID KEY IS:   " + uidKey);
-                    dbr.child(uidKey).set({
+                    dbr.child(uidKey).update({
                         postal: zip.val(),
-                        uid,
                     });
-                    $(this).parent().parent().parent().parent().remove();
-                    body.css({
-                        "opacity": "1",
-                        "pointer-events": "auto",
-                    });
-                   
-                    refresh();
                 }
                 else{
-                    //error("INVALID INPUT");
+                    console.log("THERE WAS AN ERROR!!!!!!");
                 }
+
+                //ReAuthenticate User && Email/PW update
+                const opw = oldpw.val().trim();
+                    firebase.auth().onAuthStateChanged(function(cuser) {
+                        if(cuser){
+                            //ReAuth
+                            let cred = firebase.auth.EmailAuthProvider.credential(
+                                cuser.email,
+                                opw
+                            );
+                            cuser.reauthenticateAndRetrieveDataWithCredential(cred).then(function() {
+                                console.log("USER REAUTHENTICATED!!!!!");
+                                //change email
+                                let einput = email.val().trim();
+                                if(einput.length > 0 ){
+                                    cuser.updateEmail(einput).then(function() {
+                                        //console.log("USER EMAIL HAS BEEN CHANGED TO: " + einput);
+                                    }).catch(function(error) {});
+                                }
+                            }).then(function() {
+                                //reAuth in case of new email
+                                const credpw = firebase.auth.EmailAuthProvider.credential(
+                                    cuser.email,
+                                    opw
+                                );
+                                cuser.reauthenticateAndRetrieveDataWithCredential(credpw).then(function() {
+                                    console.log("USER REAUTHENTICATED!!!!!");
+                                    //change password
+                                    let pinput = newpw.val().trim();
+                                    if(pinput.length > 0){
+                                        cuser.updatePassword(pinput);
+                                        //console.log("USER PASSWORD HAS BEEN CHANGED TO: " + pinput);
+                                    }
+                                }).catch(function(error) {
+                                    console.log("THERE WAS AN ERROR!!!!!!");
+                                });
+                            });
+                        }
+                        else{
+                            console.log("SOMETHING WENT WRONG");
+                            }
+                    });
+                $(this).parent().parent().parent().parent().remove();
+                body.css({
+                    "opacity": "1",
+                    "pointer-events": "auto",
+                });
+                
+                refresh();
             });
         });
     }
+
+
 })()

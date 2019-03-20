@@ -191,10 +191,33 @@ padding-bottom: 3px;
     margin-right: auto;
 }
 /* TICKETMASTER */
-
 .ticketmaster-wrapper{
     margin-top: 15px;
+    margin: 5px;
+    text-align: left;
+}
 
+#ticketmaster-name-div {
+    float: left;
+    overflow-wrap: normal;
+}
+
+#ticketmaster-date-and-venue-wrapper-div {
+    float: right;
+    width: 200px;
+    overflow-wrap: normal;
+}
+
+#ticketmaster-date-div {
+   /* float: left;*/
+   color: silver;
+   text-align: left;
+}
+
+#ticektmaster-venue-div {
+    /* float: right; */
+    color: silver;
+    text-align: left;
 }
 
 #map{

@@ -428,34 +428,38 @@ var mainApp = {};
             "z-index": "100",
             "width": "600px",
             "height": "200px",
-            "background-color": "red",
             "color": "black",
-            "font-family": "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
             "font-weight": "bolder",
-            "border": "5px inset black",
-            "border-radius": "10px",
+            "border-radius": "15px 50px 30px",
             "font-size": "30px",
-            "text-align": "center"
+            "text-align": "center",
+            "box-shadow": "0 5px 40px 2px rgba(155,155,155,1)",
+            "background-color": "rgba(255, 255, 255, .9)",
+            "font-family": "Arial, Helvetica, sans-serif;",
+            "border": "3px rgba(74, 170, 165, .9) solid",
         });
         let tempP = $("<p/>");
         let close = $("<div/>");
-        close.text("X");
+        close.text("x");
         close.css({
             "position": "absolute",
-            "top": "0",
-            "right": "10px",
-            "font-family": "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
-            "font-weight": "bolder",
+            "top": "10px",
+            "right": "20px",
+            "font-family": "Arial, Helvetica, sans-serif",
+            "font-weight": "bold",
             "font-size": "50px",
             "color": "black",
             "width": "50px",
             "height": "50px"
         });
-        close.attr("id", "close");
+        close.attr("id", "exit");
         tempP.text(id);
         temp.append(tempP).append(close);
         tempW.append(temp);
-        $("body").append(tempW).on("click", "#close", function () {
+
+        let h = $("html");
+        h.append(tempW);
+        h.on("click", "#exit", function () {
             $(this).parent().parent().remove();
         });
     }
@@ -511,10 +515,10 @@ var mainApp = {};
         let s = $(".splash");
         let body = $(".b");
         setTimeout(() => {
-            s.fadeOut(1000);
+            s.fadeOut(2000);
         }, 1000);
         
-        body.fadeIn(3000).css({
+        body.fadeIn(4000).css({
             "pointer-events": "none",
         });
         setTimeout(() => {
@@ -522,7 +526,7 @@ var mainApp = {};
                 "pointer-events": "auto",
                 "opacity": "1",
             });
-        }, 3000);
+        }, 4000);
     }
 
     //ReAuth Functions
@@ -747,7 +751,9 @@ var mainApp = {};
                                 if(einput.length > 0 ){
                                     cuser.updateEmail(einput).then(function() {
                                         //console.log("USER EMAIL HAS BEEN CHANGED TO: " + einput);
-                                    }).catch(function(error) {});
+                                    }).catch(function(error) {
+                                        error("Incorrect Password");
+                                    });
                                 }
                             }).then(function() {
                                 //reAuth in case of new email
@@ -764,7 +770,7 @@ var mainApp = {};
                                         //console.log("USER PASSWORD HAS BEEN CHANGED TO: " + pinput);
                                     }
                                 }).catch(function(error) {
-                                    console.log("THERE WAS AN ERROR!!!!!!");
+                                    error("Incorrect Password");
                                 });
                             });
                         }
@@ -783,5 +789,6 @@ var mainApp = {};
         });
     }
 
+    
 
 })()

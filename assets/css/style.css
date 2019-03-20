@@ -212,16 +212,65 @@ padding-bottom: 3px;
 }
 @media (max-width: 1278px){
     .weather-wrapper{
-        font-size: 12px;
+        font-size: 14px;
+        width: 100%;
     }
-}
-@media (max-width: 768px) {
-    
-    .weather-wrapper{
+    body{
+        line-height: 1.1;
+    }
+
+     .weather-wrapper{
+        margin-bottom: 0;
         display: grid;
         line-height: .5em;
         justify-items: center;
-        grid-template-rows: repeat(5, 100px);
+        grid-template-rows: repeat(4, 100px);
+        grid-template-columns: 100%;
+        overflow-y: scroll;
+    } 
+    .weather-card{
+        display: grid;
+        justify-items: center;
+        align-items: center;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: auto;
+    }
+    .weather-wrapper{
+        margin-bottom: 0;
+    }
+
+    #sidebar li{
+        list-style: none;
+        padding-bottom: 5px;
+        padding-top:5px;
+        padding-right: 5px;
+        font-size:15px;
+    }
+
+    .mainContent{
+    text-align: left;
+    margin: 0;
+    clear: both;
+    }
+
+
+}
+@media (max-width: 768px) {
+    body{
+        line-height: 1.1;
+        font-size: 17px;
+    }
+
+    .weather-condition{
+        width: 30px;
+        height: 30px;
+    }
+    .weather-wrapper{
+        margin-bottom: 0;
+        display: grid;
+        line-height: .5em;
+        justify-items: center;
+        grid-template-rows: repeat(4, 100px);
         grid-template-columns: 100%;
         overflow-y: scroll;
     }
@@ -229,7 +278,50 @@ padding-bottom: 3px;
         display: grid;
         justify-items: center;
         align-items: center;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(4 1fr);
         grid-template-rows: auto;
+    }
+    .weather-wrapper{
+        margin-bottom: 0;
+    }
+
+    #sidebar li{
+        list-style: none;
+        padding-bottom: 5px;
+        padding-top:5px;
+        padding-right: 5px;
+        font-size:15px;
+    }
+
+    .mainContent{
+    text-align: left;
+    margin: 0;
+    clear: both;
+    }
+}
+@media (max-width: 576px){
+   body{
+       line-height: 1.1;
+       font-size: 17px;
+   }
+    .weather-wrapper{
+        margin-bottom: 0;
+    }
+    .weather-condition{
+        width: 30px;
+        height: 30px;
+    }
+    #sidebar li{
+        list-style: none;
+        padding-bottom: 5px;
+        padding-top:5px;
+        padding-right: 5px;
+        font-size:15px;
+    }
+
+    .mainContent{
+    text-align: left;
+    margin: 0;
+    clear: both;
     }
 }

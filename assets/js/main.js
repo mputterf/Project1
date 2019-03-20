@@ -76,7 +76,7 @@ var mainApp = {};
         $("#welcome").append(searchButton);
     }
 
-    $(document).on("click","#ticketmastersearch", function () { 
+    $(document).on("click","#ticketmastersearch", function () {
         convertZiptoLatLong();
     });
 
@@ -105,7 +105,7 @@ var mainApp = {};
         if (deBugger) {
            console.log(latlng);
         }
-        
+
         let baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
         let apiKey = 'AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI';
         const keys = {
@@ -119,7 +119,7 @@ var mainApp = {};
             method: "GET"
 
         }).then(function (data) {
-            console.log(data);    
+            console.log(data);
         });
         //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.1103407,-118.25850960000002&radius=500&types=cafe&key=AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI
     }
@@ -132,7 +132,7 @@ var mainApp = {};
         //https://developer.ticketmaster.com/api-explorer/v2/
         //SB: 41.7132821, -86.21076719999996
         //LA: 4.1103407,-118.25850960000002
-        
+
         //https://app.ticketmaster.com/discovery/v2/events?apikey=BHuf4uL2WnsQL8kxNUsmYVVLnoKKAAE9&latlong=41.7132821,-86.21076719999996&radius=115&unit=miles&page=1&sort=name,date,asc&countryCode=US
         //TODO: have user put key in search field and search for that
         //TODO: display all results on a page - display more result items like picture, etc
@@ -203,7 +203,7 @@ var mainApp = {};
         listItemDiv.attr("id", "ticketmaster-event-" + i);
         // Display the name of the event
         listItemDiv.text(results[i].name);
-  
+
         // populate the ticketmasterWrapper
         ticketmasterWrapper.append(listItemDiv);
       }
@@ -277,7 +277,7 @@ var mainApp = {};
         // Display wind speed
         // weatherDiv.append("<p class=weather-info> Wind Speed: " + parseInt(results[i].day.maxwind_mph) + "mph </p>");
         // // Weather condition
-  
+
         // populate the weatherWrapper
         weatherWrapper.append(weatherDiv);
       }
@@ -353,6 +353,25 @@ var mainApp = {};
     //   $("#main-content").append(jobSearchDiv);
     // });
 
+    // Mapquest points of interest
+    $(document).on("click", "#points-of-interest", function(){
+      $("#welcome").empty();
+
+      // Create div to hold map
+      var mapDiv = $("<div>");
+      mapDiv.attr("id", "map");
+      $("#welcome").append(mapDiv);
+
+      // API key for mapquest
+      L.mapquest.key = "2oBp4gFXVpa5qgpXo2Dt3XWVAFlGt13M";
+
+      // Create map
+      L.mapquest.map('map', {
+      center: [37.7749, -122.4194],
+      layers: L.mapquest.tileLayer('map'),
+      zoom: 12
+      });
+    });
 
     // sets placeholder as your zip
         let zreturn = () => {
@@ -484,14 +503,14 @@ var mainApp = {};
             });
             let tempW = $("<div/>");
             tempW.css({
-               
+
                 "pointer-events": "auto",
                 "position": "absolute",
                 "top": "calc(50% - 200px)",
                 "left": "calc(50% - 400px)",
                 "opacity": "1",
             });
-            
+
             tempW.addClass("error");
             let temp = $("<div/>");
             temp.css({

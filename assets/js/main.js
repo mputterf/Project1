@@ -8,29 +8,36 @@ var mainApp = {};
     var userName = "";
     var postal = "";
     countryCode = "us";
+    let userEmail = "";
+    let userPw = "";
     let uidState = false;
+    let uidKey;
     deBugger = true;
     var geocoder = new google.maps.Geocoder();
 
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             // Run once the User is signed in.
+            delayLoader();
             if(deBugger){
                 console.log(user);
             };
             uid = user.uid;
             userName = user.displayName;
 
-            myAccount("");
+            //functions to execute upon page load
+            
+            myAccount(userName);
             zipChange();
             keyFinder();
+
             //delay necessary due to the time it takes for the other functions to run
             setTimeout(() => {
                 displayName();
                 zreturn();
                 getWeather();
               getNews();
-            }, 1000);
+            }, 2000);
 
         } else {
             //no user signed in
@@ -53,7 +60,7 @@ var mainApp = {};
 
         var newDiv = $("<div>");
         newDiv.attr("id", "welcome");
-        newDiv.text("Welcome " + userName + " Your Zipcode is " + postal);
+        newDiv.text("Welcome " + userName + " the zip code you are viewing is " + postal);
         $(".mainContent").append(newDiv);
         var space = $("<br><br>");
         $("#welcome").append(space);
@@ -509,24 +516,49 @@ var mainApp = {};
 
     // sets placeholder as your zip
         let zreturn = () => {
-            console.log(postal);
+            console.log("Z RETURN HAS RUN AND THE POSTAL CODE IS : " + postal);
             $('.zip-input').attr("placeholder", "Current Zip: " + postal);
+            $(".zip-input").css("font-size", "12px");
         }
 
 
     // set postal as a temp variable
     let zipChange = () => {
+        // for clicking the change zipcode button 
+        let zinput = $(".zip-input");
         $(".zip-btn").on("click", function() {
-            let zi = $(".zip-input").val().trim();
+            if(zinput.val().length === 5){
+                let zi = zinput.val().trim();
                 postal = zi;
-                getWeather();
-                getNews();
-                $("#welcome").remove();
-                displayName();
+                zinput.val("");
+               refresh();
                 if (deBugger){
                     console.log(postal);
                 }
+            }
         });
+        // for pressing enter inside the zipcode input
+        zinput.on("keypress", function(e) {
+            if(e.which == 13 && zinput.val().length === 5){
+                e.preventDefault();
+                let zi = zinput.val().trim();
+                postal = zi;
+                zinput.val("");
+                refresh();
+                if (deBugger){
+                    console.log(postal);
+                }
+            }
+        });
+    }
+
+    //function to refresh weather, news, welcome
+    let refresh = () => {
+        getWeather();
+        getNews();
+        zreturn();
+        $("#welcome").remove();
+        displayName();
     }
 
     //error function to display prompt
@@ -549,34 +581,38 @@ var mainApp = {};
             "z-index": "100",
             "width": "600px",
             "height": "200px",
-            "background-color": "red",
             "color": "black",
-            "font-family": "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
             "font-weight": "bolder",
-            "border": "5px inset black",
-            "border-radius": "10px",
+            "border-radius": "15px 50px 30px",
             "font-size": "30px",
-            "text-align": "center"
+            "text-align": "center",
+            "box-shadow": "0 5px 40px 2px rgba(155,155,155,1)",
+            "background-color": "rgba(255, 255, 255, .9)",
+            "font-family": "Arial, Helvetica, sans-serif;",
+            "border": "3px rgba(74, 170, 165, .9) solid",
         });
         let tempP = $("<p/>");
         let close = $("<div/>");
-        close.text("X");
+        close.text("x");
         close.css({
             "position": "absolute",
-            "top": "0",
-            "right": "10px",
-            "font-family": "Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif",
-            "font-weight": "bolder",
+            "top": "10px",
+            "right": "20px",
+            "font-family": "Arial, Helvetica, sans-serif",
+            "font-weight": "bold",
             "font-size": "50px",
             "color": "black",
             "width": "50px",
             "height": "50px"
         });
-        close.attr("id", "close");
+        close.attr("id", "exit");
         tempP.text(id);
         temp.append(tempP).append(close);
         tempW.append(temp);
-        $("body").append(tempW).on("click", "#close", function () {
+
+        let h = $("html");
+        h.append(tempW);
+        h.on("click", "#exit", function () {
             $(this).parent().parent().remove();
         });
     }
@@ -594,7 +630,7 @@ var mainApp = {};
     let keyFinder = () => {
         dbr.orderByChild("uid").equalTo(uid).on("value", (snap) => {
             snap.forEach((child) => {
-                let uidKey = child.key;
+                uidKey = child.key;
                 console.log("this is the UID Key: " + uidKey);
                 console.log("Zipcode pulled from Firebase DB");
                 uidState = true;
@@ -612,7 +648,7 @@ var mainApp = {};
             pullPostal();
             setTimeout(() => {
                 pushDB();
-            }, 500);
+            }, 800);
         }
     }
 
@@ -628,6 +664,28 @@ var mainApp = {};
         }, "jsonp");
     }
 
+    let delayLoader = () => {
+        let s = $(".splash");
+        let body = $(".b");
+        setTimeout(() => {
+            s.fadeOut(2000);
+        }, 1000);
+        
+        body.fadeIn(4000).css({
+            "pointer-events": "none",
+        });
+        setTimeout(() => {
+            body.css({
+                "pointer-events": "auto",
+                "opacity": "1",
+            });
+        }, 4000);
+    }
+
+    //ReAuth Functions
+ 
+
+    //open modal when clicking my account
     let myAccount = (id) => {
         $("#myAccount").on("click", function () {
             let body = $("nav, section, footer");
@@ -640,14 +698,21 @@ var mainApp = {};
 
                 "pointer-events": "auto",
                 "position": "absolute",
-                "top": "calc(50% - 200px)",
-                "left": "calc(50% - 400px)",
+                "top": "calc(50% - 225px)",
+                "left": "calc(50% - 425px)",
+                "width": "850px",
+                "height": "450px",
+                "box-shadow": "0 5px 40px 2px rgba(155,155,155,1)",
+                "background-color": "rgba(102, 102, 102, .85)",
+                "border-radius": "15px 50px 30px",
                 "opacity": "1",
             });
-
-            tempW.addClass("error");
+          
+            tempW.addClass("account");
             let temp = $("<div/>");
             temp.css({
+                "top": "calc(50% - 200px)",
+                "left": "calc(50% - 400px)",
                 "position" : "relative",
                 "display": "grid",
                 "justify-items": "center",
@@ -655,17 +720,132 @@ var mainApp = {};
                 "z-index": "99",
                 "width": "800px",
                 "height": "400px",
-                "background-color": "rgba(75, 170, 165, .9)",
+                "padding": "30px",
+                "border-radius": "0",
+                "box-shadow": "0 5px 40px 2px rgba(155,155,155,1)",
+                "background-color": "rgba(255, 255, 255, .9)",
                 "color": "black",
                 "font-family": "Arial, Helvetica, sans-serif;",
                 "font-weight": "bolder",
-                "border": "2px inset grey",
-                "border-radius": "10px",
+                "border": "3px rgba(74, 170, 165, .9) solid",
                 "font-size": "30px",
                 "text-align": "center"
             });
-            let tempP = $("<p/>");
+            let b = $("body");
+            let tempH = $("<h2/>");
+            let tempD = $("<div/>");
             let close = $("<div/>");
+            let pdiv = $("<div/>");
+            let idiv = $("<div/>");
+            let img = $("<img/>");
+            let email = $("<input/>");
+            let zip = $("<input/>");
+            let oldpw = $("<input/>");
+            let newpw = $("<input/>");
+            let sub = $("<button> Update </button>");
+            tempH.text("My Accounts Settings for " + id);
+            tempD.css({
+                "display": "grid",
+                "grid-template-columns": "1fr 2fr",
+                "grid-template-rows": "90%",
+                "grid-gap": "10px",
+                "width": "100%",
+                "height": "100%",
+            });
+            img.attr(
+                'src', "assets/img/unknownProfile.jpg").css({
+                "width": "200px",
+                "height": "200px",
+            });
+            pdiv.css({
+                "grid-row": "1/1",
+                "grid-column": "1/1",
+                "justify-self": "center",
+                "align-self": "center",
+            }).append(img);
+            email.attr({
+                "type": "email",
+                "placeholder": "   example@email.com",
+                "id": "email-update"
+            }).css({
+                "font-size": "15px",
+                "color": "rgba(74, 170, 165, .9)",
+                "width": "400px",
+                "height": "30px",
+                "outline": "none",
+            });
+            oldpw.attr({
+                "type": "text",
+                "placeholder": "   Old Password",
+                "id": "old-pw",
+            }).css({
+                "font-size": "15px",
+                "color": "rgba(74, 170, 165, .9)",
+                "width": "400px",
+                "height": "30px",
+                "outline": "none",
+            });
+            newpw.attr({
+                "type": "text",
+                "placeholder": "   New Password",
+                "id": "pw-update",
+            }).css({
+                "font-size": "15px",
+                "color": "rgba(74, 170, 165, .9)",
+                "width": "400px",
+                "height": "30px",
+                "outline": "none",
+            });
+            zip.attr({
+                "type": "text",
+                "maxlength": "5",
+                "id": "zip-update",
+                "placeholder": "   " + postal,
+            }).css({
+                "font-size": "15px",
+                "color": "rgba(74, 170, 165, .9)",
+                "width": "400px",
+                "height": "30px",
+                "outline": "none",
+            });
+            sub.attr({
+                "type": "submit",
+                "id": "account-update",
+            }).css({
+                "box-shadow": "0 5px 10px 2px rgba(155,155,155,1)",
+                "background-color": "rgba(255, 255, 255, .9)",
+                "color": "black",
+                "font-family": "Arial, Helvetica, sans-serif;",
+                "font-weight": "bolder",
+                "border": "3px rgba(74, 170, 165, .9) solid",
+                "border-radius": "15px 50px 30px",
+                "font-size": "15px",
+                "margin": "10px 0 10px auto",
+                "width": "100px",
+                "height": "35px",
+                "display": "block",
+                "text-align": "center",
+                "outline": "none",
+            });
+            idiv.css({
+                "grid-row": "1/1",
+                "grid-column": "2/2",
+                "justify-self": "left",
+                "align-self": "center",
+                "text-align": "left",
+                "font-family": "Arial, Helvetica, sans-serif;",
+                "font-weight": "bold",
+                "font-size": "15px",
+                "margin": "20px auto"
+            });
+            pdiv.append(img);
+            idiv.append("<p style = 'margin: 5px auto;'>Change Email</p>").append(email);
+            idiv.append("<p style = 'margin: 5px auto;'>Old Password</p>").append(oldpw);
+            idiv.append("<p style = 'margin: 5px auto;'>New Password</p>").append(newpw);
+            idiv.append("<p style = 'margin: 5px auto;'>Change Zip Code</p>").append(zip);
+            idiv.append(sub);
+            tempD.append(pdiv);
+            tempD.append(idiv)
             close.text("x");
             close.css({
                 "position": "absolute",
@@ -676,21 +856,92 @@ var mainApp = {};
                 "font-size": "50px",
                 "color": "grey",
                 "width": "50px",
-                "height": "50px"
+                "height": "50px",
+                "cursor": "crosshair",
             });
             close.attr("id", "close");
-            tempP.text(id);
-            temp.append(tempP).append(close);
+            temp.append(tempH).append(tempD).append(close);
             tempW.append(temp);
-            $("body").append(tempW).on("click", "#close", function () {
+
+            b.append(tempW);
+
+            b.on("click", "#close", function () {
                 $(this).parent().parent().remove();
                 body.css({
                     "opacity": "1",
                     "pointer-events": "auto",
                 });
             });
-        });
 
+            b.on("click", "#account-update", function() {
+                
+                //zipcode Update
+                if(zip.val().length === 5){
+                    postal = zip.val();
+                
+                    console.log("THE UID KEY IS:   " + uidKey);
+                    dbr.child(uidKey).update({
+                        postal: zip.val(),
+                    });
+                }
+                else{
+                    console.log("THERE WAS AN ERROR!!!!!!");
+                }
+
+                //ReAuthenticate User && Email/PW update
+                const opw = oldpw.val().trim();
+                    firebase.auth().onAuthStateChanged(function(cuser) {
+                        if(cuser){
+                            //ReAuth
+                            let cred = firebase.auth.EmailAuthProvider.credential(
+                                cuser.email,
+                                opw
+                            );
+                            cuser.reauthenticateAndRetrieveDataWithCredential(cred).then(function() {
+                                console.log("USER REAUTHENTICATED!!!!!");
+                                //change email
+                                let einput = email.val().trim();
+                                if(einput.length > 0 ){
+                                    cuser.updateEmail(einput).then(function() {
+                                        //console.log("USER EMAIL HAS BEEN CHANGED TO: " + einput);
+                                    }).catch(function(error) {
+                                        error("Incorrect Password");
+                                    });
+                                }
+                            }).then(function() {
+                                //reAuth in case of new email
+                                const credpw = firebase.auth.EmailAuthProvider.credential(
+                                    cuser.email,
+                                    opw
+                                );
+                                cuser.reauthenticateAndRetrieveDataWithCredential(credpw).then(function() {
+                                    console.log("USER REAUTHENTICATED!!!!!");
+                                    //change password
+                                    let pinput = newpw.val().trim();
+                                    if(pinput.length > 0){
+                                        cuser.updatePassword(pinput);
+                                        //console.log("USER PASSWORD HAS BEEN CHANGED TO: " + pinput);
+                                    }
+                                }).catch(function(error) {
+                                    error("Incorrect Password");
+                                });
+                            });
+                        }
+                        else{
+                            console.log("SOMETHING WENT WRONG");
+                            }
+                    });
+                $(this).parent().parent().parent().parent().remove();
+                body.css({
+                    "opacity": "1",
+                    "pointer-events": "auto",
+                });
+                
+                refresh();
+            });
+        });
     }
+
+    
 
 })()

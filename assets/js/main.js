@@ -77,10 +77,11 @@ var mainApp = {};
     }
 
     $(document).on("click","#ticketmastersearch", function () {
-        convertZiptoLatLong();
+        var ticketmaster = true;
+        convertZiptoLatLong(ticketmaster, function(){});
     });
 
-    function convertZiptoLatLong() {
+    function convertZiptoLatLong(ticketmaster, callbackfunction) {
         var lat = '';
         var lng = '';
         var address = postal;
@@ -93,7 +94,12 @@ var mainApp = {};
                 console.log("latlng: ", latlng);
             }
             // call ticketmaster here
-            getTicketmasterEvents(latlng);
+            if (ticketmaster){
+              getTicketmasterEvents(latlng);
+            } else {
+              callbackfunction(latlng);
+            }
+
         } else {
             console.log("Geocode was not successful for the following reason: " + status);
         }
@@ -365,12 +371,20 @@ var mainApp = {};
       // API key for mapquest
       L.mapquest.key = "2oBp4gFXVpa5qgpXo2Dt3XWVAFlGt13M";
 
+      // make sure to not trigger ticketmaster api
+      var ticketmaster = false;
+
       // Create map
-      L.mapquest.map('map', {
-      center: [37.7749, -122.4194],
-      layers: L.mapquest.tileLayer('map'),
-      zoom: 12
-      });
+      function mapCall(latlng){
+        L.mapquest.map('map', {
+        center: [latlng.lat, latlng.lng],
+        layers: L.mapquest.tileLayer('map'),
+        zoom: 12
+        });
+      }
+
+      // creates the map with your zip centered via callback
+      convertZiptoLatLong(ticketmaster, mapCall);
     });
 
     // sets placeholder as your zip

@@ -4,6 +4,7 @@ body{
     line-height: 1.5em;
     margin: 0;
     padding: 0;
+    pointer-events: none;
 }
 .section{
     margin:0;
@@ -229,4 +230,19 @@ padding-bottom: 3px;
         grid-template-columns: repeat(5, 1fr);
         grid-template-rows: auto;
     }
+}
+.splash{
+    z-index: 99;
+    font-size: 100px;
+    position: absolute;
+    top: calc(50% - 50px);
+    left:calc(50% - 350px);
+    font-weight: bolder;
+    font-family: 'Open Sans', sans-serif;
+}
+.splash #splash-dash{
+    color:#56a79a;
+}
+.b{
+    display: none;
 }

@@ -16,12 +16,14 @@ var mainApp = {};
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             // Run once the User is signed in.
+            delayLoader();
             if(deBugger){
                 console.log(user);
             };
             uid = user.uid;
             userName = user.displayName;
             //functions to execute upon page load
+            
             myAccount(userName);
             zipChange();
             keyFinder();
@@ -32,7 +34,7 @@ var mainApp = {};
                 zreturn();
                 getWeather();
               getNews();
-            }, 1000);
+            }, 2000);
 
         } else {
             //no user signed in
@@ -500,6 +502,24 @@ var mainApp = {};
                 console.log(response);
             };
         }, "jsonp");
+    }
+
+    let delayLoader = () => {
+        let s = $(".splash");
+        let body = $(".b");
+        setTimeout(() => {
+            s.fadeOut(1000);
+        }, 1000);
+        
+        body.fadeIn(3000).css({
+            "pointer-events": "none",
+        });
+        setTimeout(() => {
+            body.css({
+                "pointer-events": "auto",
+                "opacity": "1",
+            });
+        }, 3000);
     }
 
     //open modal when clicking my account

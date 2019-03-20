@@ -19,10 +19,10 @@ body{
 .clearfix{
   overflow: auto;
 }
-
+/* NEWS AND WEATHER */
 .news-img{
-  width: 100px;
-  height: 100px;
+  width: 50px;
+  height: 50px;
   float: left;
   padding-right: 5px;
 }
@@ -36,42 +36,31 @@ body{
     margin: auto;
     width:100%;
     border: 1px solid #888;
-    box-shadow: 0 5px 40px 2px rgba(155,155,155,1);
-    max-height: 313px;
+    /* box-shadow: 0 5px 40px 2px rgba(155,155,155,1); */
+    max-height: 150px;
     overflow-y: auto;
 }
 
 .weather-wrapper{
     margin: auto;
     width:100%;
-    height: 313px;
+    height: 150px;
     border: 1px solid #888;
-    box-shadow: 0 5px 40px 2px rgba(155,155,155,1);
+    /* box-shadow: 0 5px 40px 2px rgba(155,155,155,1); */
     font-size: 15px;
 }
+.weather-wrapper p{
+    margin-bottom: .25em;
+}
+.top{
+    border-bottom: 2px solid #666;
+}
+#welcome{
+    padding-top: 15px;
 
-@media (max-width: 1278px){
-    .weather-wrapper{
-        font-size: 12px;
-    }
 }
-@media (max-width: 768px) {
-    
-    .weather-wrapper{
-        display: grid;
-        justify-items: center;
-        grid-template-rows: repeat(5, 100px);
-        grid-template-columns: 100%;
-        overflow-y: scroll;
-    }
-    .weather-card{
-        display: grid;
-        justify-items: center;
-        align-items: center;
-        grid-template-columns: repeat(5, 1fr);
-        grid-template-rows: auto;
-    }
-}
+
+/* FONT STYLES */
 .primary-text{
     color:#56a79a;
 }
@@ -161,8 +150,7 @@ padding-bottom: 3px;
 /* MAINCONTENT */
 .mainContent{
     text-align: center;
-    margin:30px 30px 0px 30px;
-    padding: 30px 30px;
+    margin:30px 30px 0px 30px;  
     background: #fff;
     color: #333;
     border: 1px solid #444;
@@ -173,7 +161,9 @@ padding-bottom: 3px;
     transition: 0.33s, cubic-bezier(0.685, 0.0473, 0.346, 1);
     box-shadow: 0 5px 40px 2px rgba(155,155,155,1);
 }
-
+.card-body{
+    padding: .5rem;
+}
 /* Footer */
 #main-footer{
         position: fixed;
@@ -194,13 +184,45 @@ padding-bottom: 3px;
 }
 
 .weather-condition{
-    width: 64px;
-    height: 64px;
+    width: 45px;
+    height: 45px;
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
+/* TICKETMASTER */
 
+.ticketmaster-wrapper{
+    margin-top: 15px;
+    margin: 5px;
+    text-align: left;
+}
+
+#ticketmaster-name-div {
+    float: left;
+    overflow-wrap: normal;
+}
+
+#ticketmaster-date-and-venue-wrapper-div {
+    float: right;
+    width: 200px;
+    overflow-wrap: normal;
+}
+
+#ticketmaster-date-div {
+   /* float: left;*/
+   color: silver;
+   text-align: left;
+}
+
+#ticektmaster-venue-div {
+    /* float: right; */
+    color: silver;
+    text-align: left;
+
+}
+
+/* MEDIA QUERRIES */
 @media (min-width: 1900px){
 
     .container {
@@ -211,5 +233,28 @@ padding-bottom: 3px;
     }
     #sidebar{
         margin-left: 80px;
+    }
+}
+@media (max-width: 1278px){
+    .weather-wrapper{
+        font-size: 12px;
+    }
+}
+@media (max-width: 768px) {
+    
+    .weather-wrapper{
+        display: grid;
+        line-height: .5em;
+        justify-items: center;
+        grid-template-rows: repeat(5, 100px);
+        grid-template-columns: 100%;
+        overflow-y: scroll;
+    }
+    .weather-card{
+        display: grid;
+        justify-items: center;
+        align-items: center;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: auto;
     }
 }

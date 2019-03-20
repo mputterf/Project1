@@ -67,26 +67,25 @@ var mainApp = {};
         var contentDiv = $("<div>");
         contentDiv.attr("id", "main-content");
         $("#welcome").append(contentDiv);
-
     }
 
     $('#ticketmaster').click(function(){ loadSearch(); return false; });
 
     // loads the search into the main content div
     function loadSearch() {
-        $("#welcome").empty();
         var searchInput = $("<input type='text' name='searchfield'>");
-        $("#welcome").append(searchInput);
+        $("#main-content").append(searchInput);
         var space = $("<br><br>");
-        $("#welcome").append(space);
+        $("#main-content").append(space);
         var searchButton = $("<button id='ticketmastersearch' type='button'>Search</button>");
-        $("#welcome").append(searchButton);
+        $("#main-content").append(searchButton);
     }
 
     $(document).on("click","#ticketmastersearch", function () { 
         convertZiptoLatLong();
     });
 
+    //converts a zipcode to a latlong coordinate
     function convertZiptoLatLong() {
         var lat = '';
         var lng = '';
@@ -96,21 +95,23 @@ var mainApp = {};
             lat = results[0].geometry.location.lat();
             lng = results[0].geometry.location.lng();
             var latlng = {lat, lng};
-            if (deBugger) {
-                console.log("latlng: ", latlng);
-            }
-            // call ticketmaster here
-            getTicketmasterEvents(latlng);
+            console.log("latlng: ", latlng);
+            // call google places here
+            ticketmaster(latlng);
+
         } else {
             console.log("Geocode was not successful for the following reason: " + status);
         }
         });
+        // if (deBugger) {
+        //     console.log('Latitude: ' + lat + ' Logitude: ' + lng);
+        // }
     }
 
-    function googlePlaces(latlng) {
+    function ticketmaster(latlng) {
         // googlePlaces
         if (deBugger) {
-           console.log(latlng);
+          console.log("latlng: ",latlng);
         }
         
         let baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
@@ -126,7 +127,99 @@ var mainApp = {};
             method: "GET"
 
         }).then(function (data) {
-            console.log(data);    
+            console.log("date - latlng: ", data);  
+        });
+        //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.1103407,-118.25850960000002&radius=500&types=cafe&key=AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI
+    }
+
+    function googlePlaces(latlng) {
+        // googlePlaces
+        console.log(latlng);
+        
+        let baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
+        let apiKey = 'AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI';
+        const keys = {
+            location:`${latlng.lat},${latlng.lng}`,
+            radius: 500,
+            types: 'cafe',
+            key: apiKey
+        };
+        $.ajax({
+            url: `${baseUrl}?location=${keys.location}&radius=${keys.radius}&types=${keys.types}&key=${keys.key}`,
+            method: "GET"
+
+        }).then(function (data) {
+            console.log(data);
+            
+        });
+        //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.1103407,-118.25850960000002&radius=500&types=cafe&key=AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI
+    }
+
+    $('#ticketmaster').click(function(){ loadSearch(); return false; });
+
+    // loads the search into the main content div
+    function loadSearch() {
+        $("#welcome").empty();
+        var userInstructions = $("<div>Enter a keyword to search on</div>");
+        $("#welcome").append(userInstructions);
+        var searchInput = $("<input type='text' id='ticketmasterkeywordsearchfield'>");
+        $("#welcome").append(searchInput);
+        var space = $("<br><br>");
+        $("#welcome").append(space);
+        var searchButton = $("<button id='ticketmastersearch' type='button'>Search</button>");
+        $("#welcome").append(searchButton);
+    }
+
+    $(document).on("click","#ticketmastersearch", function () {
+        var ticketmaster = true;
+        convertZiptoLatLong(ticketmaster, function(){});
+    });
+
+    function convertZiptoLatLong(ticketmaster, callbackfunction) {
+        var lat = '';
+        var lng = '';
+        var address = postal;
+        geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            lat = results[0].geometry.location.lat();
+            lng = results[0].geometry.location.lng();
+            var latlng = {lat, lng};
+            if (deBugger) {
+                console.log("latlng: ", latlng);
+            }
+            // call ticketmaster here
+            if (ticketmaster){
+              getTicketmasterEvents(latlng);
+            } else {
+              callbackfunction(latlng);
+            }
+
+        } else {
+            console.log("Geocode was not successful for the following reason: " + status);
+        }
+        });
+    }
+
+    function googlePlaces(latlng) {
+        // googlePlaces
+        if (deBugger) {
+           console.log(latlng);
+        }
+
+        let baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
+        let apiKey = 'AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI';
+        const keys = {
+            location:`${latlng.lat},${latlng.lng}`,
+            radius: 500,
+            types: 'cafe',
+            key: apiKey
+        };
+        $.ajax({
+            url: `${baseUrl}?location=${keys.location}&radius=${keys.radius}&types=${keys.types}&key=${keys.key}`,
+            method: "GET"
+
+        }).then(function (data) {
+            console.log(data);
         });
         //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.1103407,-118.25850960000002&radius=500&types=cafe&key=AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI
     }
@@ -139,11 +232,18 @@ var mainApp = {};
         //https://developer.ticketmaster.com/api-explorer/v2/
         //SB: 41.7132821, -86.21076719999996
         //LA: 4.1103407,-118.25850960000002
-        
+
         //https://app.ticketmaster.com/discovery/v2/events?apikey=BHuf4uL2WnsQL8kxNUsmYVVLnoKKAAE9&latlong=41.7132821,-86.21076719999996&radius=115&unit=miles&page=1&sort=name,date,asc&countryCode=US
-        //TODO: have user put key in search field and search for that
+
+        //var keyword = $("#ticketmasterkeywordsearchfield").val().trim().replace(/\s/g,'%20');
+        var keyword = $("#ticketmasterkeywordsearchfield").val();
+        if (deBugger) {
+            console.log("keyword", keyword);
+            //https://app.ticketmaster.com/discovery/v2/events?apikey=BHuf4uL2WnsQL8kxNUsmYVVLnoKKAAE9&keyword=basketball%20field&countryCode=US
+        }
+        //TODO: have user put key in search field and search for that - stuck on multi-keyword entries.
         //TODO: display all results on a page - display more result items like picture, etc
-        //TODO: what if you have more than 20 results? pages
+        //TODO: what if you have more than 20 results? &page= (look at page information at the top) - make a arrow container
         //TODO: make it all fit in the height of the maincontent tag
         let baseUrl = 'https://app.ticketmaster.com/discovery/v2/events';
         let apiKey = 'BHuf4uL2WnsQL8kxNUsmYVVLnoKKAAE9';
@@ -153,14 +253,17 @@ var mainApp = {};
             unit: "miles",
             pages: 1,
             key: apiKey,
+            keyword: keyword, 
             sort: "name,date,asc",
             countryCode: "US"
         };
         if (deBugger) {
-            console.log(`${baseUrl}?apikey=${keys.key}&latlong=${keys.latlong}&radius=${keys.radius}&unit=${keys.unit}&pages=${keys.pages}&sort=${keys.sort}&countryCode=${keys.countryCode}`);
+            //console.log(`${baseUrl}?apikey=${keys.key}&latlong=${keys.latlong}&radius=${keys.radius}&unit=${keys.unit}&pages=${keys.pages}&sort=${keys.sort}&keyword=${keys.keyword}&countryCode=${keys.countryCode}`);
+            console.log(`${baseUrl}?apikey=${keys.key}&keyword=${keys.keyword}`);
         }
         $.ajax({
-            url: `${baseUrl}?apikey=${keys.key}&latlong=${keys.latlong}&radius=${keys.radius}&unit=${keys.unit}&pages=${keys.pages}&sort=${keys.sort}&countryCode=${keys.countryCode}`,
+            //url: `${baseUrl}?apikey=${keys.key}&latlong=${keys.latlong}&radius=${keys.radius}&unit=${keys.unit}&pages=${keys.pages}&sort=${keys.sort}&keyword=${keys.keyword}&countryCode=${keys.countryCode}`,
+            url: `${baseUrl}?apikey=${keys.key}&keyword=${keys.keyword}`,
             method: "GET"
         }).then(function (data) {
             if (deBugger) {
@@ -171,32 +274,30 @@ var mainApp = {};
         });
     }
 
+
+    //TODO: see what page we are on.  calculate total number of pages.  if there are more events, display a right chevron.  if we are on page > 0, diesplay a left chevron.  
+    //TODO: when click on the event, then display details and have a back button as well.  
+    //when a left chevron is clicked, go to the previous page, when a right chevron is clicked, go to the next page.   
     function displyTicketmasterResults(results) {
         $("#welcome").empty();
         //results._embedded.events gives an array, so stuff in results is an array and should be accessed with results[i]
       var results = results._embedded.events;
 
       // Creating weather wrapper to overwrite HTML every time new zip is made
-      let ticketmasterWrapper = $("<div/>");
-      //ticketmasterDiv Styling
-      ticketmasterWrapper.css({
-        //"width": "calc(100% - 50px)",
-        "margin": "5px",
-        //"display": "grid",
-        "text-align": "left",
-        //"justify-items": "left",
-    });
-
+      let ticketmasterWrapper = $("<div>");
       ticketmasterWrapper.addClass("ticketmaster-wrapper");
-      // Boostrap card deck so the weather cards line up horizontally
+      // Boostrap card
       ticketmasterWrapper.addClass("card");
       ticketmasterWrapper.addClass("text-success");
 
       // Card header
       let ticketmasterEventsTextDiv = $("<div/>");
       ticketmasterEventsTextDiv.addClass("card-header");
-      ticketmasterEventsTextDiv.text("Ticketmaster Events Near You");
+      ticketmasterEventsTextDiv.html("<strong>Ticketmaster Events Near You</strong>");
       ticketmasterWrapper.append(ticketmasterEventsTextDiv);
+      //TODO: need a wrapper div like below
+      var rightChevron = $("<span class='right-chevron glyphicon glyphicon-chevron-right' data-page='0'></span>");
+      var leftChevron = $("<span class='left-chevron glyphicon glyphicon-chevron-left' data-page='0'></span>");
 
       let resultsList = $("<ul>");
       resultsList.addClass("list-group");
@@ -208,8 +309,33 @@ var mainApp = {};
         var listItemDiv = $("<li>");
         listItemDiv.addClass("list-group-item");
         listItemDiv.attr("id", "ticketmaster-event-" + i);
+
+        
         // Display the name of the event
-        listItemDiv.text(results[i].name);
+
+        var nameDiv = $("<div>");
+        nameDiv.attr("id", "ticketmaster-name-div");
+        nameDiv.text(results[i].name);
+        listItemDiv.append(nameDiv);
+
+        var wrapperDiv = $("<div>");
+        wrapperDiv.attr("id", "ticketmaster-date-and-venue-wrapper-div");
+        listItemDiv.append(wrapperDiv);
+
+        // Display the date of the event
+        var dateDiv = $("<div>");
+        dateDiv.attr("id", "ticketmaster-date-div");
+        dateDiv.text(results[i].dates.start.localDate);
+        wrapperDiv.append(dateDiv);
+
+        // Display the venue of the event
+        var venueDiv = $("<div>");
+        venueDiv.attr("id", "ticektmaster-venue-div");
+        venueDiv.text(results[i]._embedded.venues[0].name);
+        wrapperDiv.append(venueDiv);
+        
+        
+        //listItemDiv.text(results[i].name)
   
         // populate the ticketmasterWrapper
         ticketmasterWrapper.append(listItemDiv);
@@ -284,7 +410,7 @@ var mainApp = {};
         // Display wind speed
         // weatherDiv.append("<p class=weather-info> Wind Speed: " + parseInt(results[i].day.maxwind_mph) + "mph </p>");
         // // Weather condition
-  
+
         // populate the weatherWrapper
         weatherWrapper.append(weatherDiv);
       }
@@ -360,6 +486,33 @@ var mainApp = {};
     //   $("#main-content").append(jobSearchDiv);
     // });
 
+    // Mapquest points of interest
+    $(document).on("click", "#points-of-interest", function(){
+      $("#welcome").empty();
+
+      // Create div to hold map
+      var mapDiv = $("<div>");
+      mapDiv.attr("id", "map");
+      $("#welcome").append(mapDiv);
+
+      // API key for mapquest
+      L.mapquest.key = "2oBp4gFXVpa5qgpXo2Dt3XWVAFlGt13M";
+
+      // make sure to not trigger ticketmaster api
+      var ticketmaster = false;
+
+      // Create map
+      function mapCall(latlng){
+        L.mapquest.map('map', {
+        center: [latlng.lat, latlng.lng],
+        layers: L.mapquest.tileLayer('map'),
+        zoom: 12
+        });
+      }
+
+      // creates the map with your zip centered via callback
+      convertZiptoLatLong(ticketmaster, mapCall);
+    });
 
     // sets placeholder as your zip
         let zreturn = () => {
@@ -542,7 +695,7 @@ var mainApp = {};
             });
             let tempW = $("<div/>");
             tempW.css({
-               
+
                 "pointer-events": "auto",
                 "position": "absolute",
                 "top": "calc(50% - 225px)",
@@ -554,7 +707,7 @@ var mainApp = {};
                 "border-radius": "15px 50px 30px",
                 "opacity": "1",
             });
-            
+          
             tempW.addClass("account");
             let temp = $("<div/>");
             temp.css({

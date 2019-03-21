@@ -26,18 +26,17 @@ var mainApp = {};
             userName = user.displayName;
 
             //functions to execute upon page load
-            
+            setUser();
             myAccount(userName);
             zipChange();
-            keyFinder();
 
             //delay necessary due to the time it takes for the other functions to run
             setTimeout(() => {
                 displayName();
                 zreturn();
                 getWeather();
-              getNews();
-            }, 2000);
+                getNews();
+            }, 1500);
 
         } else {
             //no user signed in
@@ -590,6 +589,7 @@ var mainApp = {};
             "background-color": "rgba(255, 255, 255, .9)",
             "font-family": "Arial, Helvetica, sans-serif;",
             "border": "3px rgba(74, 170, 165, .9) solid",
+            "padding": "10px",
         });
         let tempP = $("<p/>");
         let close = $("<div/>");
@@ -607,7 +607,7 @@ var mainApp = {};
         });
         close.attr("id", "exit");
         tempP.text(id);
-        temp.append(tempP).append(close);
+        temp.append("<div>Error:</div>").append(tempP).append(close);
         tempW.append(temp);
 
         let h = $("html");
@@ -617,39 +617,30 @@ var mainApp = {};
         });
     }
 
-
-    // push zipcode and UID to db
-    let pushDB = () => {
-        dbr.push({
-            uid,
-            postal,
+    //sets uid as child element in db and saves the zipcode if it hasn't been saved already
+    let setUser = () => {
+        dbr.on("value", (snap) => {
+            if(snap.hasChild(uid)){
+                db.ref(uid).on("value", (s) => {
+                    let ptemp = s.val().postal;
+                    if(ptemp.length == 5){
+                        postal = ptemp;
+                        console.log("Logged Zip: " + ptemp);
+                    }
+                    else{
+                        pullPostal();
+                    }
+                });
+            }
+            else{
+                pullPostal();
+                setTimeout(() => {
+                    db.ref(uid).set({
+                        postal,
+                    });
+                }, 1000);
+            }
         });
-    }
-
-    // finds key to current UID
-    let keyFinder = () => {
-        dbr.orderByChild("uid").equalTo(uid).on("value", (snap) => {
-            snap.forEach((child) => {
-                uidKey = child.key;
-                console.log("this is the UID Key: " + uidKey);
-                console.log("Zipcode pulled from Firebase DB");
-                uidState = true;
-                postal = child.val().postal;
-            });
-        });
-        setTimeout(() => {
-            dbKeyChecker();
-        }, 500);
-    }
-
-    // checks if youre in the db already
-    let dbKeyChecker = () => {
-        if(!uidState){
-            pullPostal();
-            setTimeout(() => {
-                pushDB();
-            }, 800);
-        }
     }
 
     //capture the users IP address and utilize it to pull news and weather
@@ -668,10 +659,10 @@ var mainApp = {};
         let s = $(".splash");
         let body = $(".b");
         setTimeout(() => {
-            s.fadeOut(2000);
-        }, 1000);
+            s.fadeOut(1500);
+        }, 500);
         
-        body.fadeIn(4000).css({
+        body.fadeIn(2000).css({
             "pointer-events": "none",
         });
         setTimeout(() => {
@@ -679,10 +670,8 @@ var mainApp = {};
                 "pointer-events": "auto",
                 "opacity": "1",
             });
-        }, 4000);
+        }, 2000);
     }
-
-    //ReAuth Functions
  
 
     //open modal when clicking my account
@@ -878,18 +867,17 @@ var mainApp = {};
                 //zipcode Update
                 if(zip.val().length === 5){
                     postal = zip.val();
-                
-                    console.log("THE UID KEY IS:   " + uidKey);
-                    dbr.child(uidKey).update({
+                    db.ref(uid).update({
                         postal: zip.val(),
                     });
                 }
                 else{
-                    console.log("THERE WAS AN ERROR!!!!!!");
+                    console.log("NO ZIP INPUT");
                 }
 
                 //ReAuthenticate User && Email/PW update
                 const opw = oldpw.val().trim();
+                if(opw !== ""){
                     firebase.auth().onAuthStateChanged(function(cuser) {
                         if(cuser){
                             //ReAuth
@@ -904,11 +892,13 @@ var mainApp = {};
                                 if(einput.length > 0 ){
                                     cuser.updateEmail(einput).then(function() {
                                         //console.log("USER EMAIL HAS BEEN CHANGED TO: " + einput);
-                                    }).catch(function(error) {
-                                        error("Incorrect Password");
+                                    }).catch(function(e) {
+                                        console.log(e);
                                     });
                                 }
-                            }).then(function() {
+                            }).catch(function(e) {
+                                error(e.message);
+                           }).then(function() {
                                 //reAuth in case of new email
                                 const credpw = firebase.auth.EmailAuthProvider.credential(
                                     cuser.email,
@@ -922,8 +912,6 @@ var mainApp = {};
                                         cuser.updatePassword(pinput);
                                         //console.log("USER PASSWORD HAS BEEN CHANGED TO: " + pinput);
                                     }
-                                }).catch(function(error) {
-                                    error("Incorrect Password");
                                 });
                             });
                         }
@@ -931,6 +919,8 @@ var mainApp = {};
                             console.log("SOMETHING WENT WRONG");
                             }
                     });
+                }
+      
                 $(this).parent().parent().parent().parent().remove();
                 body.css({
                     "opacity": "1",
@@ -941,7 +931,4 @@ var mainApp = {};
             });
         });
     }
-
-    
-
 })()

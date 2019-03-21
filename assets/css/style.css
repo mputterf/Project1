@@ -247,6 +247,25 @@ padding-bottom: 3px;
         margin-left: 80px;
     }
 }
+.weather-wrapper{
+    margin-bottom: 0;
+}
+
+#sidebar li{
+    list-style: none;
+    padding-bottom: 5px;
+    padding-top:5px;
+    padding-right: 5px;
+    font-size:15px;
+}
+
+.mainContent{
+text-align: left;
+margin: 0;
+clear: both;
+margin-bottom: 60px;
+}
+
 .splash{
     z-index: 99;
     font-size: 100px;
@@ -336,25 +355,7 @@ body{
         grid-template-rows: auto;
     }
 }
- .weather-wrapper{
-        margin-bottom: 0;
-    }
 
-    #sidebar li{
-        list-style: none;
-        padding-bottom: 5px;
-        padding-top:5px;
-        padding-right: 5px;
-        font-size:15px;
-    }
-
-    .mainContent{
-    text-align: left;
-    margin: 0;
-    clear: both;
-    margin-bottom: 60px;
-    }
-}
 @media (max-width: 576px){
    body{
        line-height: 1.1;

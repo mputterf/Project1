@@ -80,7 +80,7 @@ var mainApp = {};
         $("#main-content").append(searchButton);
     }
 
-    $(document).on("click","#ticketmastersearch", function () { 
+    $(document).on("click","#ticketmastersearch", function () {
         convertZiptoLatLong();
     });
 
@@ -112,7 +112,7 @@ var mainApp = {};
         if (deBugger) {
           console.log("latlng: ",latlng);
         }
-        
+
         let baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
         let apiKey = 'AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI';
         const keys = {
@@ -126,7 +126,7 @@ var mainApp = {};
             method: "GET"
 
         }).then(function (data) {
-            console.log("date - latlng: ", data);  
+            console.log("date - latlng: ", data);
         });
         //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.1103407,-118.25850960000002&radius=500&types=cafe&key=AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI
     }
@@ -134,7 +134,7 @@ var mainApp = {};
     function googlePlaces(latlng) {
         // googlePlaces
         console.log(latlng);
-        
+
         let baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
         let apiKey = 'AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI';
         const keys = {
@@ -149,7 +149,7 @@ var mainApp = {};
 
         }).then(function (data) {
             console.log(data);
-            
+
         });
         //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.1103407,-118.25850960000002&radius=500&types=cafe&key=AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI
     }
@@ -252,7 +252,7 @@ var mainApp = {};
             unit: "miles",
             pages: 1,
             key: apiKey,
-            keyword: keyword, 
+            keyword: keyword,
             sort: "name,date,asc",
             countryCode: "US"
         };
@@ -274,9 +274,9 @@ var mainApp = {};
     }
 
 
-    //TODO: see what page we are on.  calculate total number of pages.  if there are more events, display a right chevron.  if we are on page > 0, diesplay a left chevron.  
-    //TODO: when click on the event, then display details and have a back button as well.  
-    //when a left chevron is clicked, go to the previous page, when a right chevron is clicked, go to the next page.   
+    //TODO: see what page we are on.  calculate total number of pages.  if there are more events, display a right chevron.  if we are on page > 0, diesplay a left chevron.
+    //TODO: when click on the event, then display details and have a back button as well.
+    //when a left chevron is clicked, go to the previous page, when a right chevron is clicked, go to the next page.
     function displyTicketmasterResults(results) {
         $("#welcome").empty();
         //results._embedded.events gives an array, so stuff in results is an array and should be accessed with results[i]
@@ -309,7 +309,7 @@ var mainApp = {};
         listItemDiv.addClass("list-group-item");
         listItemDiv.attr("id", "ticketmaster-event-" + i);
 
-        
+
         // Display the name of the event
 
         var nameDiv = $("<div>");
@@ -332,10 +332,10 @@ var mainApp = {};
         venueDiv.attr("id", "ticektmaster-venue-div");
         venueDiv.text(results[i]._embedded.venues[0].name);
         wrapperDiv.append(venueDiv);
-        
-        
+
+
         //listItemDiv.text(results[i].name)
-  
+
         // populate the ticketmasterWrapper
         ticketmasterWrapper.append(listItemDiv);
       }
@@ -489,6 +489,20 @@ var mainApp = {};
     $(document).on("click", "#points-of-interest", function(){
       $("#welcome").empty();
 
+      // Search box and button for place of interests
+      var mapSearchDiv = $("<div>");
+      mapSearchDiv.text("Enter some place to search for");
+      var breakLine = $("<br>");
+      mapSearchDiv.append(breakLine);
+      $("#welcome").append(mapSearchDiv);
+      var mapSearchBox = $("<input>");
+      mapSearchBox.attr("id", "map-search-box");
+      mapSearchDiv.append(mapSearchBox);
+      var mapSearchButton = $("<button>");
+      mapSearchButton.attr("id", "map-search-button");
+      mapSearchButton.text("Search");
+      mapSearchDiv.append(mapSearchButton);
+
       // Create div to hold map
       var mapDiv = $("<div>");
       mapDiv.attr("id", "map");
@@ -510,8 +524,48 @@ var mainApp = {};
       }
 
       // creates the map with your zip centered via callback
-      convertZiptoLatLong(ticketmaster, mapCall);
+      // convertZiptoLatLong(ticketmaster, mapCall);
     });
+
+    $(document).on("click", "#map-search-button", function(){
+        var ticketmaster = false;
+        $("#map").empty();
+        convertZiptoLatLong(ticketmaster, getPointsOfInterest);
+        // getPointsOfInterest();
+    });
+
+    // function getPointsOfInterest(){
+    function getPointsOfInterest(latlng){
+      // L.mapquest.key = "2oBp4gFXVpa5qgpXo2Dt3XWVAFlGt13M";
+      var apiKeyMapSearch = "Zo2ZmNO0bAEQ22WrffsasBZg6BgcAXkm";
+      var pointSearch = $("#map-search-box").val();
+      var mapQueryUrl = "https://api.tomtom.com/search/2/poiSearch/"+ pointSearch +".json?countrySet=US&lat=34.17490&lon=-118.61527&radius=32187&key="+ apiKeyMapSearch;
+
+
+      $.ajax({
+          url: mapQueryUrl,
+          method: "GET"
+
+      }).then(function (mapquestResponse) {
+          console.log("Points of interest object", mapquestResponse);
+
+          var map = L.mapquest.map('map', {
+          center: [latlng.lat, latlng.lng],
+          // center: [34.17490, -118.61527],
+          layers: L.mapquest.tileLayer('map'),
+          zoom: 12
+          });
+
+          for(var i=0; i<mapquestResponse.results.length; i++){
+            L.marker([mapquestResponse.results[i].position.lat, mapquestResponse.results[i].position.lon], {
+            icon: L.mapquest.icons.marker(),
+            draggable: false
+          }).bindPopup(mapquestResponse.results[i].poi.name + "<br>" + mapquestResponse.results[i].address.freeformAddress).addTo(map);
+          }
+
+
+      });
+    }
 
     // sets placeholder as your zip
         let zreturn = () => {
@@ -523,7 +577,7 @@ var mainApp = {};
 
     // set postal as a temp variable
     let zipChange = () => {
-        // for clicking the change zipcode button 
+        // for clicking the change zipcode button
         let zinput = $(".zip-input");
         $(".zip-btn").on("click", function() {
             if(zinput.val().length === 5){
@@ -661,7 +715,7 @@ var mainApp = {};
         setTimeout(() => {
             s.fadeOut(1500);
         }, 500);
-        
+
         body.fadeIn(2000).css({
             "pointer-events": "none",
         });
@@ -672,7 +726,7 @@ var mainApp = {};
             });
         }, 2000);
     }
- 
+
 
     //open modal when clicking my account
     let myAccount = (id) => {
@@ -696,7 +750,7 @@ var mainApp = {};
                 "border-radius": "15px 50px 30px",
                 "opacity": "1",
             });
-          
+
             tempW.addClass("account");
             let temp = $("<div/>");
             temp.css({
@@ -863,7 +917,7 @@ var mainApp = {};
             });
 
             b.on("click", "#account-update", function() {
-                
+
                 //zipcode Update
                 if(zip.val().length === 5){
                     postal = zip.val();
@@ -920,13 +974,13 @@ var mainApp = {};
                             }
                     });
                 }
-      
+
                 $(this).parent().parent().parent().parent().remove();
                 body.css({
                     "opacity": "1",
                     "pointer-events": "auto",
                 });
-                
+
                 refresh();
             });
         });

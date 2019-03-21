@@ -68,19 +68,23 @@ var mainApp = {};
         $("#welcome").append(contentDiv);
     }
 
-    $('#ticketmaster').click(function(){ loadSearch(); return false; });
+    //$('#ticketmaster').click(function(){ loadSearch(); return false; });
 
     // loads the search into the main content div
-    function loadSearch() {
-        var searchInput = $("<input type='text' name='searchfield'>");
-        $("#main-content").append(searchInput);
-        var space = $("<br><br>");
-        $("#main-content").append(space);
-        var searchButton = $("<button id='ticketmastersearch' type='button'>Search</button>");
-        $("#main-content").append(searchButton);
-    }
+    // function loadSearch() {
+    //     var form = $("<form>");
+    //     var searchInput = $("<input type='text' name='searchfield'>");
+    //     form.append(searchInput);
+    //     $("#main-content").append(form);
+    //     var space = $("<br><br>");
+    //     form.append(space);
+    //     var searchButton = $("<button id='ticketmastersearch' type='submit'>Search</button>");
+    //     form.append(searchButton);
+    //     $("#main-content").append(form);
+    // }
 
-    $(document).on("click","#ticketmastersearch", function () {
+    $(document).on("click","#ticketmastersearch", function (event) {
+        event.preventDefault();
         convertZiptoLatLong();
     });
 
@@ -159,14 +163,16 @@ var mainApp = {};
     // loads the search into the main content div
     function loadSearch() {
         $("#welcome").empty();
+        var form = $("<form>");
         var userInstructions = $("<div>Enter a keyword to search on</div>");
-        $("#welcome").append(userInstructions);
+        $("#welcome").append(form);
+        form.append(userInstructions);
         var searchInput = $("<input type='text' id='ticketmasterkeywordsearchfield'>");
-        $("#welcome").append(searchInput);
+        form.append(searchInput);
         var space = $("<br><br>");
-        $("#welcome").append(space);
-        var searchButton = $("<button id='ticketmastersearch' type='button'>Search</button>");
-        $("#welcome").append(searchButton);
+        form.append(space);
+        var searchButton = $("<button id='ticketmastersearch' type='submit'>Search</button>");
+        form.append(searchButton);
     }
 
     $(document).on("click","#ticketmastersearch", function () {

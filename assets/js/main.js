@@ -436,29 +436,8 @@ var mainApp = {};
       mapSearchButton.text("Search");
       mapSearchDiv.append(mapSearchButton);
 
-      // Create div to hold map
-      // var mapDiv = $("<div>");
-      // mapDiv.attr("id", "map");
-      // $("#welcome").append(mapDiv);
       makeMapDiv();
 
-      // API key for mapquest
-      L.mapquest.key = "2oBp4gFXVpa5qgpXo2Dt3XWVAFlGt13M";
-
-      // make sure to not trigger ticketmaster api
-      var ticketmaster = false;
-
-      // Create map
-      function mapCall(latlng){
-        L.mapquest.map('map', {
-        center: [latlng.lat, latlng.lng],
-        layers: L.mapquest.tileLayer('map'),
-        zoom: 12
-        });
-      }
-
-      // creates the map with your zip centered via callback
-      // convertZiptoLatLong(ticketmaster, mapCall);
     });
 
     function makeMapDiv(){
@@ -468,7 +447,9 @@ var mainApp = {};
     }
 
     $(document).on("click", "#map-search-button", function(){
+        // So ticketmaster doesn't get triggers
         var ticketmaster = false;
+        // get rid of any map already on the page so we can get ready for a new one
         $("#map").remove();
         makeMapDiv();
         convertZiptoLatLong(ticketmaster, getPointsOfInterest);
@@ -485,7 +466,12 @@ var mainApp = {};
           method: "GET"
 
       }).then(function (mapquestResponse) {
+        if(deBugger){
           console.log("Points of interest object", mapquestResponse);
+        }
+
+          // API key for mapquest
+          L.mapquest.key = "2oBp4gFXVpa5qgpXo2Dt3XWVAFlGt13M";
 
           var map = L.mapquest.map('map', {
           center: [latlng.lat, latlng.lng],

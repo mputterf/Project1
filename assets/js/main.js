@@ -468,7 +468,7 @@ var mainApp = {};
     function getPointsOfInterest(latlng){
       var apiKeyMapSearch = "Zo2ZmNO0bAEQ22WrffsasBZg6BgcAXkm";
       var pointSearch = $("#map-search-box").val();
-      var mapQueryUrl = "https://api.tomtom.com/search/2/poiSearch/"+ pointSearch +".json?&limit=20countrySet=US&lat=34.17490&lon=-118.61527&radius=32187&key="+ apiKeyMapSearch;
+      var mapQueryUrl = "https://api.tomtom.com/search/2/poiSearch/"+ pointSearch +".json?&limit=20countrySet=US&lat=" + latlng.lat + "&lon=" + latlng.lng + "&radius=32187&key="+ apiKeyMapSearch;
 
 
       $.ajax({

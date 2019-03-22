@@ -423,6 +423,7 @@ var mainApp = {};
 
       // Search box and button for place of interests
       var mapSearchDiv = $("<div>");
+      mapSearchDiv.attr("id", "map-search-div");
       mapSearchDiv.text("Enter some place to search for");
       var breakLine = $("<br>");
       mapSearchDiv.append(breakLine);
@@ -436,9 +437,10 @@ var mainApp = {};
       mapSearchDiv.append(mapSearchButton);
 
       // Create div to hold map
-      var mapDiv = $("<div>");
-      mapDiv.attr("id", "map");
-      $("#welcome").append(mapDiv);
+      // var mapDiv = $("<div>");
+      // mapDiv.attr("id", "map");
+      // $("#welcome").append(mapDiv);
+      makeMapDiv();
 
       // API key for mapquest
       L.mapquest.key = "2oBp4gFXVpa5qgpXo2Dt3XWVAFlGt13M";
@@ -459,9 +461,16 @@ var mainApp = {};
       // convertZiptoLatLong(ticketmaster, mapCall);
     });
 
+    function makeMapDiv(){
+      var mapDiv = $("<div>");
+      mapDiv.attr("id", "map");
+      $("#welcome").append(mapDiv);
+    }
+
     $(document).on("click", "#map-search-button", function(){
         var ticketmaster = false;
-        $("#map").empty();
+        $("#map").remove();
+        makeMapDiv();
         convertZiptoLatLong(ticketmaster, getPointsOfInterest);
     });
 

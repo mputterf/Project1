@@ -68,95 +68,7 @@ var mainApp = {};
         $("#welcome").append(contentDiv);
     }
 
-    //$('#ticketmaster').click(function(){ loadSearch(); return false; });
 
-    // loads the search into the main content div
-    // function loadSearch() {
-    //     var form = $("<form>");
-    //     var searchInput = $("<input type='text' name='searchfield'>");
-    //     form.append(searchInput);
-    //     $("#main-content").append(form);
-    //     var space = $("<br><br>");
-    //     form.append(space);
-    //     var searchButton = $("<button id='ticketmastersearch' type='submit'>Search</button>");
-    //     form.append(searchButton);
-    //     $("#main-content").append(form);
-    // }
-
-    $(document).on("click","#ticketmastersearch", function (event) {
-        event.preventDefault();
-        convertZiptoLatLong();
-    });
-
-    //converts a zipcode to a latlong coordinate
-    function convertZiptoLatLong() {
-        var lat = '';
-        var lng = '';
-        var address = postal;
-        geocoder.geocode( { 'address': address}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            lat = results[0].geometry.location.lat();
-            lng = results[0].geometry.location.lng();
-            var latlng = {lat, lng};
-            console.log("latlng: ", latlng);
-            // call google places here
-            ticketmaster(latlng);
-
-        } else {
-            console.log("Geocode was not successful for the following reason: " + status);
-        }
-        });
-        // if (deBugger) {
-        //     console.log('Latitude: ' + lat + ' Logitude: ' + lng);
-        // }
-    }
-
-    function ticketmaster(latlng) {
-        // googlePlaces
-        if (deBugger) {
-          console.log("latlng: ",latlng);
-        }
-
-        let baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
-        let apiKey = 'AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI';
-        const keys = {
-            location:`${latlng.lat},${latlng.lng}`,
-            radius: 500,
-            types: 'cafe',
-            key: apiKey
-        };
-        $.ajax({
-            url: `${baseUrl}?location=${keys.location}&radius=${keys.radius}&types=${keys.types}&key=${keys.key}`,
-            method: "GET"
-
-        }).then(function (data) {
-            console.log("date - latlng: ", data);
-        });
-        //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.1103407,-118.25850960000002&radius=500&types=cafe&key=AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI
-    }
-
-    function googlePlaces(latlng) {
-        // googlePlaces
-        console.log(latlng);
-
-        let baseUrl = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
-        let apiKey = 'AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI';
-        const keys = {
-            location:`${latlng.lat},${latlng.lng}`,
-            radius: 500,
-            types: 'cafe',
-            key: apiKey
-        };
-        $.ajax({
-            url: `${baseUrl}?location=${keys.location}&radius=${keys.radius}&types=${keys.types}&key=${keys.key}`,
-            method: "GET"
-
-        }).then(function (data) {
-            console.log(data);
-
-        });
-        //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=34.1103407,-118.25850960000002&radius=500&types=cafe&key=AIzaSyD2fMFXXjaU_--ubFbg8T6rLWaju98eAeI
-    }
 
     $('#ticketmaster').click(function(){ loadSearch(); return false; });
 
@@ -183,25 +95,38 @@ var mainApp = {};
     function convertZiptoLatLong(ticketmaster, callbackfunction) {
         var lat = '';
         var lng = '';
-        var address = postal;
-        geocoder.geocode( { 'address': address}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            lat = results[0].geometry.location.lat();
-            lng = results[0].geometry.location.lng();
-            var latlng = {lat, lng};
-            if (deBugger) {
-                console.log("latlng: ", latlng);
-            }
-            // call ticketmaster here
+        // var address = postal;
+        // geocoder.geocode( { 'address': address}, function(results, status) {
+        // if (status == google.maps.GeocoderStatus.OK) {
+        //     lat = results[0].geometry.location.lat();
+        //     lng = results[0].geometry.location.lng();
+        //     var latlng = {lat, lng};
+        //     if (deBugger) {
+        //         console.log("latlng: ", latlng);
+        //     }
+        //     // call ticketmaster here
+
+        var geoKey = "QNsATavzcxyMxvtmbBmg8rPQRBynQnGA";
+        var geocodeURL = "http://www.mapquestapi.com/geocoding/v1/address?key=" + geoKey + "&location=" + postal;
+
+        $.ajax({
+          url: geocodeURL,
+          method: "GET"
+        }).then( function (georesponse){
+          console.log("geo", georesponse.results[0].locations[0].latLng);
+
+          var latlng = georesponse.results[0].locations[0].latLng;
+          // var latlng = {geoLatLngResponse.lat, geoLatLngResponse.lng};
+        // });
             if (ticketmaster){
               getTicketmasterEvents(latlng);
             } else {
               callbackfunction(latlng);
             }
-
-        } else {
-            console.log("Geocode was not successful for the following reason: " + status);
-        }
+        //
+        // } else {
+        //     console.log("Geocode was not successful for the following reason: " + status);
+        // }
         });
     }
 
@@ -492,16 +417,6 @@ var mainApp = {};
     }
 
 
-    // Job search api
-    // $(document).on("click", "#job-search-button", function(){
-    //   console.log("Job Search clicked!");
-    //
-    //   var jobSearchDiv = $("<div>");
-    //   jobSearchDiv.text("text was successful");
-    //
-    //   $("#main-content").append(jobSearchDiv);
-    // });
-
     // Mapquest points of interest
     $(document).on("click", "#points-of-interest", function(){
       $("#welcome").empty();
@@ -548,15 +463,12 @@ var mainApp = {};
         var ticketmaster = false;
         $("#map").empty();
         convertZiptoLatLong(ticketmaster, getPointsOfInterest);
-        // getPointsOfInterest();
     });
 
-    // function getPointsOfInterest(){
     function getPointsOfInterest(latlng){
-      // L.mapquest.key = "2oBp4gFXVpa5qgpXo2Dt3XWVAFlGt13M";
       var apiKeyMapSearch = "Zo2ZmNO0bAEQ22WrffsasBZg6BgcAXkm";
       var pointSearch = $("#map-search-box").val();
-      var mapQueryUrl = "https://api.tomtom.com/search/2/poiSearch/"+ pointSearch +".json?countrySet=US&lat=34.17490&lon=-118.61527&radius=32187&key="+ apiKeyMapSearch;
+      var mapQueryUrl = "https://api.tomtom.com/search/2/poiSearch/"+ pointSearch +".json?&limit=20countrySet=US&lat=34.17490&lon=-118.61527&radius=32187&key="+ apiKeyMapSearch;
 
 
       $.ajax({

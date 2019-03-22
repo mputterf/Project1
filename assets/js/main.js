@@ -268,12 +268,12 @@ var mainApp = {};
         }
         $.ajax({
             //url: `${baseUrl}?apikey=${keys.key}&latlong=${keys.latlong}&radius=${keys.radius}&unit=${keys.unit}&pages=${keys.pages}&sort=${keys.sort}&keyword=${keys.keyword}&countryCode=${keys.countryCode}`,
-            url: `${baseUrl}?apikey=${keys.key}&keyword=${keys.keyword}`,
+            url: `${baseUrl}?apikey=${keys.key}&keyword=${keys.keyword}&radius=${keys.radius}&sort=${keys.sort}`,
             method: "GET"
         }).then(function (data) {
             if (deBugger) {
                 console.log(data);
-                console.log(data._embedded.events[0].name);
+                //console.log(data._embedded.events[0].name);
             }
             displyTicketmasterResults(data);
         });
@@ -286,6 +286,16 @@ var mainApp = {};
     function displyTicketmasterResults(results) {
         $("#welcome").empty();
         //results._embedded.events gives an array, so stuff in results is an array and should be accessed with results[i]
+        //alert(typeof results._embedded)
+        if (typeof results._embedded === "undefined") {
+            if (deBugger) {
+                console.log("There are no results for this search term.");
+            }
+            var ticketmasterDiv = $("<div>");
+            ticketmasterDiv.text("There are no results for this search term.")
+            $("#welcome").append(ticketmasterDiv);
+        }
+        else {
       var results = results._embedded.events;
 
       // Creating weather wrapper to overwrite HTML every time new zip is made
@@ -349,6 +359,7 @@ var mainApp = {};
       // overwrite main content div
       $("#welcome").append(ticketmasterWrapper);
       console.log("Ticket Event Updated");
+    }
     }
 
 

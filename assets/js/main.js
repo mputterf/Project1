@@ -107,7 +107,7 @@ var mainApp = {};
         //     // call ticketmaster here
 
         var geoKey = "QNsATavzcxyMxvtmbBmg8rPQRBynQnGA";
-        var geocodeURL = "http://www.mapquestapi.com/geocoding/v1/address?key=" + geoKey + "&location=" + postal;
+        var geocodeURL = "https://www.mapquestapi.com/geocoding/v1/address?key=" + geoKey + "&location=" + postal;
 
         $.ajax({
           url: geocodeURL,
